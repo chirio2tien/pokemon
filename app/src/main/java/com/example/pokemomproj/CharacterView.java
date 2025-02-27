@@ -7,6 +7,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -28,6 +29,7 @@ public class CharacterView extends View {
     private AnimationDrawable animationDrawableDownLeft;
     private AnimationDrawable currentDrawable;
     private AnimationDrawable previousDrawable;
+    private  AnimationDrawable skillDrawable1;
 
     public CharacterView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -88,10 +90,16 @@ public class CharacterView extends View {
         super.onDraw(canvas);
         if (currentDrawable != null) {
             canvas.save();
-            canvas.translate(characterX - (float) currentDrawable.getIntrinsicWidth() / 2, characterY - (float) currentDrawable.getIntrinsicHeight() / 2);
+            // Center the drawable based on characterX and characterY
+            float drawX = characterX - (float) currentDrawable.getIntrinsicWidth() / 2;
+            float drawY = characterY - (float) currentDrawable.getIntrinsicHeight() / 2;
+            canvas.translate(drawX, drawY);
             currentDrawable.setBounds(0, 0, currentDrawable.getIntrinsicWidth(), currentDrawable.getIntrinsicHeight());
             currentDrawable.draw(canvas);
             canvas.restore();
+
+            // Log the character's position for debugging
+            Log.d(TAG, "Character position: (" + characterX + ", " + characterY + ")");
         } else {
             Log.e(TAG, "currentDrawable is null in onDraw");
         }
@@ -154,5 +162,46 @@ public class CharacterView extends View {
     }
     public Node getPlayerPosition() {
         return new Node((int) (characterX / 50), (int) (characterY / 50));
+    }
+    public void useSkill1() {
+        Log.d(TAG, "Skill 1 used!");
+
+        float directionX = 0;
+        float directionY = 0;
+
+        if (currentDrawable == animationDrawableUp) {
+            directionY = -1;
+        } else if (currentDrawable == animationDrawableDown) {
+            directionY = 1;
+        } else if (currentDrawable == animationDrawableLeft) {
+            directionX = -1;
+        } else if (currentDrawable == animationDrawableRight) {
+            directionX = 1;
+        } else if (currentDrawable == animationDrawableUpRight) {
+            directionX = 1;
+            directionY = -1;
+        } else if (currentDrawable == animationDrawableUpLeft) {
+            directionX = -1;
+            directionY = -1;
+        } else if (currentDrawable == animationDrawableDownRight) {
+            directionX = 1;
+            directionY = 1;
+        } else if (currentDrawable == animationDrawableDownLeft) {
+            directionX = -1;
+            directionY = 1;
+        }
+
+
+        // Adjust the starting position of the fireball to match the character's position
+        int[] location = new int[2];
+        getLocationOnScreen(location);
+        float startX = location[0] + characterX-70;
+        float startY = location[1] + characterY;
+
+        Log.d(TAG, "FireballSkill created at position: (" + startX + ", " + startY + ") with direction: (" + directionX + ", " + directionY + ")");
+
+
+        skill1 fireballSkill = new skill1(getContext(), startX, startY, directionX, directionY);
+        ((ViewGroup) getParent()).addView(fireballSkill);
     }
 }

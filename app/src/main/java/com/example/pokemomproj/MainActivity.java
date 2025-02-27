@@ -2,8 +2,10 @@ package com.example.pokemomproj;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -31,7 +33,13 @@ public class MainActivity extends AppCompatActivity {
         botView = findViewById(R.id.botView);
 
         //botView.setCharacterView(characterView);
-
+        Button skillButton1 = findViewById(R.id.skillButton1);
+        skillButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                characterView.useSkill1();
+            }
+        });
 
         JoystickView joystickView = findViewById(R.id.joystickView);
         joystickView.setJoystickListener(new JoystickView.JoystickListener() {
