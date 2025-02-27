@@ -1,0 +1,40 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.example.pokemomproj'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.example.pokemomproj"
+        minSdk 30
+        targetSdk 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation('com.github.bumptech.glide:glide:4.16.0') {
+        exclude group: 'androidx.annotation', module: 'annotation'
+    }
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.29'
+    implementation libs.monitor
+    implementation libs.androidx.junit
+    testImplementation libs.junit.junit
+}
