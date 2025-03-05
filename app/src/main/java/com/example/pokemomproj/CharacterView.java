@@ -163,45 +163,85 @@ public class CharacterView extends View {
     public Node getPlayerPosition() {
         return new Node((int) (characterX / 50), (int) (characterY / 50));
     }
-    public void useSkill1() {
-        Log.d(TAG, "Skill 1 used!");
+    // Add these fields to CharacterView.java
+    private int maxMana = 100;
+    private int currentMana = 100;
+    private mana_bar manaBar;
 
-        float directionX = 0;
-        float directionY = 0;
+    // Add this method to CharacterView.java
+    public void setManaBar(mana_bar manaBar) {
+        this.manaBar = manaBar;
+    }
 
-        if (currentDrawable == animationDrawableUp) {
-            directionY = -1;
-        } else if (currentDrawable == animationDrawableDown) {
-            directionY = 1;
-        } else if (currentDrawable == animationDrawableLeft) {
-            directionX = -1;
-        } else if (currentDrawable == animationDrawableRight) {
-            directionX = 1;
-        } else if (currentDrawable == animationDrawableUpRight) {
-            directionX = 1;
-            directionY = -1;
-        } else if (currentDrawable == animationDrawableUpLeft) {
-            directionX = -1;
-            directionY = -1;
-        } else if (currentDrawable == animationDrawableDownRight) {
-            directionX = 1;
-            directionY = 1;
-        } else if (currentDrawable == animationDrawableDownLeft) {
-            directionX = -1;
-            directionY = 1;
+    // Add this method to CharacterView.java
+    private void reduceMana(int amount) {
+        currentMana = Math.max(currentMana - amount, 0);
+        if (manaBar != null) {
+            manaBar.setMana(currentMana);
         }
+    }
 
+    // Add this method to CharacterView.java
+    public void startManaRegeneration() {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                currentMana = Math.min(currentMana + 8, maxMana);
+                if (manaBar != null) {
+                    manaBar.setMana(currentMana);
+                }
+                postDelayed(this, 1000); // Regenerate mana every second
+            }
+        });
+    }
 
-        // Adjust the starting position of the fireball to match the character's position
-        int[] location = new int[2];
-        getLocationOnScreen(location);
-        float startX = location[0] + characterX-70;
-        float startY = location[1] + characterY;
+    // Update the useSkill1 method in CharacterView.java
+    public skill1 useSkill1() {
+        skill1 fireballSkill = null;
+        if (currentMana >= maxMana * 0.2) {
+            Log.d(TAG, "Skill 1 used!");
+            reduceMana((int) (maxMana * 0.2));
 
-        Log.d(TAG, "FireballSkill created at position: (" + startX + ", " + startY + ") with direction: (" + directionX + ", " + directionY + ")");
+            float directionX = 0;
+            float directionY = 0;
 
+            if (currentDrawable == animationDrawableUp) {
+                directionY = -1;
+            } else if (currentDrawable == animationDrawableDown) {
+                directionY = 1;
+            } else if (currentDrawable == animationDrawableLeft) {
+                directionX = -1;
+            } else if (currentDrawable == animationDrawableRight) {
+                directionX = 1;
+            } else if (currentDrawable == animationDrawableUpRight) {
+                directionX = 1;
+                directionY = -1;
+            } else if (currentDrawable == animationDrawableUpLeft) {
+                directionX = -1;
+                directionY = -1;
+            } else if (currentDrawable == animationDrawableDownRight) {
+                directionX = 1;
+                directionY = 1;
+            } else if (currentDrawable == animationDrawableDownLeft) {
+                directionX = -1;
+                directionY = 1;
+            }
 
-        skill1 fireballSkill = new skill1(getContext(), startX, startY, directionX, directionY);
-        ((ViewGroup) getParent()).addView(fireballSkill);
+            int[] location = new int[2];
+            getLocationOnScreen(location);
+            float startX = location[0] + characterX;
+            float startY = location[1] + characterY;
+
+            Log.d(TAG, "FireballSkill created at position: (" + startX + ", " + startY + ") with direction: (" + directionX + ", " + directionY + ")");
+
+            int fireballWidth = 100;
+            int fireballHeight = 100;
+
+            fireballSkill = new skill1(getContext(), startX, startY, directionX, directionY, fireballWidth, fireballHeight);
+            ((ViewGroup) getParent()).addView(fireballSkill);
+        } else {
+            Log.d(TAG, "Not enough mana to use Skill 1");
+        }
+        return fireballSkill;
     }
 }

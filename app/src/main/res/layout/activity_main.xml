@@ -5,6 +5,7 @@
     android:layout_height="411dp"
     tools:context=".MainActivity">
 
+
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gifImageView"
         android:layout_width="match_parent"
@@ -12,6 +13,7 @@
         android:src="@drawable/image_batter"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints,ImageContrastCheck" />
@@ -60,6 +62,57 @@
         android:text="@string/use_skill_1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/gifImageView"
+        tools:ignore="MissingConstraints" />
+
+    <!-- Character HP and Mana Bars -->
+
+    <!-- Bot HP and Mana Bars -->
+
+
+    <com.example.pokemomproj.hp_bar
+        android:id="@+id/characterHpBar"
+        android:layout_width="200dp"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@+id/gifImageView"
+        app:layout_constraintTop_toTopOf="@+id/gifImageView"
+        tools:ignore="MissingConstraints" />
+
+    <com.example.pokemomproj.mana_bar
+        android:id="@+id/characterManaBar"
+        android:layout_width="200dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/characterHpBar"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintStart_toStartOf="@+id/gifImageView"
+        app:layout_constraintTop_toTopOf="@+id/gifImageView"
+        tools:ignore="MissingConstraints" />
+
+    <com.example.pokemomproj.mana_bar
+        android:id="@+id/botManaBar"
+        android:layout_width="200dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/botHpBar"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="568dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintStart_toStartOf="@+id/gifImageView"
+        app:layout_constraintTop_toTopOf="@+id/gifImageView"
+        tools:ignore="MissingConstraints" />
+
+    <com.example.pokemomproj.hp_bar
+        android:id="@+id/botHpBar"
+        android:layout_width="200dp"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="568dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@+id/gifImageView"
+        app:layout_constraintTop_toTopOf="@+id/gifImageView"
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

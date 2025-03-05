@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 
 import java.util.Objects;
 import java.util.Random;
@@ -34,6 +33,11 @@ public class BotView extends View {
     private float xDirection;
     private float yDirection;
     private int duration;
+    private float botX;
+    private float botY;
+    private int maxHp = 100;
+    private int currentHp = 100;
+    private hp_bar hpBar;
 
     public BotView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -41,7 +45,6 @@ public class BotView extends View {
         imageY = 600;
         random = new Random();
         handler = new Handler();
-
 
         initAnimations(context);
         startAnimation();
@@ -52,11 +55,12 @@ public class BotView extends View {
             public void run() {
                 move(xDirection, yDirection);
                 invalidate();
-                handler.postDelayed(this, 1000/60); // 67 milliseconds for 15fps
+                handler.postDelayed(this, 1000 / 60); // 60 FPS
             }
         };
         handler.post(invalidateRunnable);
     }
+
     private void initAnimations(Context context) {
         String characterName = "giratina"; // Ensure this matches your drawable names
 
@@ -100,6 +104,7 @@ public class BotView extends View {
             }
         });
     }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -168,8 +173,25 @@ public class BotView extends View {
             imageY = newY;
         }
 
-
-
         invalidate();
+    }
+
+    public float getBotX() {
+        return botX;
+    }
+
+    public float getBotY() {
+        return botY;
+    }
+
+    public void setHpBar(hp_bar hpBar) {
+        this.hpBar = hpBar;
+    }
+
+    public void reduceHp(int percentage) {
+        currentHp = Math.max(currentHp - (maxHp * percentage / 100), 0);
+        if (hpBar != null) {
+            hpBar.setHp(currentHp);
+        }
     }
 }

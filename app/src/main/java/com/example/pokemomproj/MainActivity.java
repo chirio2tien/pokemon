@@ -13,15 +13,13 @@ public class MainActivity extends AppCompatActivity {
     private CharacterView characterView;
     private BotView botView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Hide the title bar
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
-
-        // Enable full-screen mode
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
             final WindowInsetsController insetsController = getWindow().getInsetsController();
             if (insetsController != null) {
@@ -32,12 +30,19 @@ public class MainActivity extends AppCompatActivity {
         characterView = findViewById(R.id.characterView);
         botView = findViewById(R.id.botView);
 
-        //botView.setCharacterView(characterView);
+        mana_bar characterManaBar = findViewById(R.id.characterManaBar);
+        characterView.setManaBar(characterManaBar);
+        characterView.startManaRegeneration();
+
+        hp_bar botHpBar = findViewById(R.id.botHpBar);
+        botView.setHpBar(botHpBar);
+
         Button skillButton1 = findViewById(R.id.skillButton1);
         skillButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                characterView.useSkill1();
+                skill1 fireballSkill = characterView.useSkill1();
+                fireballSkill.setBotView(botView);
             }
         });
 
