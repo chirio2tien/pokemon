@@ -18,14 +18,14 @@ public class BotView extends View {
     private static final String TAG = "BotView";
     private float imageX;
     private float imageY;
-    private AnimationDrawable animationDrawableUp;
-    private AnimationDrawable animationDrawableDown;
-    private AnimationDrawable animationDrawableLeft;
-    private AnimationDrawable animationDrawableRight;
-    private AnimationDrawable animationDrawableUpRight;
-    private AnimationDrawable animationDrawableUpLeft;
-    private AnimationDrawable animationDrawableDownRight;
-    private AnimationDrawable animationDrawableDownLeft;
+    public AnimationDrawable animationDrawableUp;
+    public AnimationDrawable animationDrawableDown;
+    public AnimationDrawable animationDrawableLeft;
+    public AnimationDrawable animationDrawableRight;
+    public AnimationDrawable animationDrawableUpRight;
+    public AnimationDrawable animationDrawableUpLeft;
+    public AnimationDrawable animationDrawableDownRight;
+    public AnimationDrawable animationDrawableDownLeft;
     private AnimationDrawable animationDrawable;
     private Runnable invalidateRunnable;
     private Handler handler;
@@ -33,11 +33,12 @@ public class BotView extends View {
     private float xDirection;
     private float yDirection;
     private int duration;
-    private float botX;
-    private float botY;
     private int maxHp = 100;
     private int currentHp = 100;
     private hp_bar hpBar;
+    private float botX;
+    private float botY;
+
 
     public BotView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -54,8 +55,21 @@ public class BotView extends View {
             @Override
             public void run() {
                 move(xDirection, yDirection);
+
                 invalidate();
                 handler.postDelayed(this, 1000 / 60); // 60 FPS
+            }
+        };
+        handler.post(invalidateRunnable);
+        invalidateRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                if (random.nextFloat() < 0.50) { // 25% chance
+                    skill1 fireballSkill = skill1.botUseSkill(BotView.this);
+                }
+
+                handler.postDelayed(this, random.nextInt(500) + 500); // Random delay between 0.5 to 3 seconds
             }
         };
         handler.post(invalidateRunnable);
@@ -162,17 +176,18 @@ public class BotView extends View {
         if (newX < animationDrawable.getIntrinsicWidth() / 2 || newX > getWidth() - animationDrawable.getIntrinsicWidth() / 2) {
             xDirection = -xDirection;
             yDirection = (random.nextFloat() - 0.5f) * 2; // Random value between -1 and 1
-        } else {
+        }else {
             imageX = newX;
         }
 
         if (newY < animationDrawable.getIntrinsicHeight() / 2 || newY > getHeight() - animationDrawable.getIntrinsicHeight() / 2) {
             xDirection = (random.nextFloat() - 0.5f) * 2; // Random value between -1 and 1
             yDirection = -yDirection;
-        } else {
+        }else {
             imageY = newY;
         }
-
+        botX = imageX;
+        botY = imageY;
         invalidate();
     }
 
@@ -193,5 +208,84 @@ public class BotView extends View {
         if (hpBar != null) {
             hpBar.setHp(currentHp);
         }
+        if (currentHp == 0) {
+            Log.d(TAG, "Bot HP is zero. Handling bot defeat.");
+            // Handle bot defeat logic here
+        }
+
+    }
+    public  float getCurrentHp(){
+        return currentHp;
+    }
+    public boolean checkCollision(float x, float y, float width, float height) {
+        float botLeft = imageX - animationDrawable.getIntrinsicWidth() / 2;
+        float botRight = imageX + animationDrawable.getIntrinsicWidth() / 2;
+        float botTop = imageY - animationDrawable.getIntrinsicHeight() / 2;
+        float botBottom = imageY + animationDrawable.getIntrinsicHeight() / 2;
+
+        float skillLeft = x-500;
+        float skillRight = x-500 + width;
+        float skillTop = y-100;
+        float skillBottom = y-100 + height;
+        Log.d("checkskill", "Fireball position: (" + x + ", " + y + "): "+imageX+" "+imageY);
+        return !(skillLeft > botRight || skillRight < botLeft || skillTop > botBottom || skillBottom < botTop);
+    }
+
+    private int maxMana = 100;
+    private int currentMana = 100;
+    private mana_bar manaBar;
+
+    // Add this method to CharacterView.java
+    public void setManaBar(mana_bar manaBar) {
+        this.manaBar = manaBar;
+    }
+
+    // Add this method to CharacterView.java
+    public void reduceMana(int amount) {
+        currentMana = Math.max(currentMana - amount, 0);
+
+        if (manaBar != null) {
+            manaBar.setMana(currentMana);
+        }
+
+
+        if (currentMana == 0) {
+            Log.d(TAG, "Mana is depleted. Handling mana depletion.");
+            // Handle mana depletion logic here
+        }
+    }
+
+    // Add this method to CharacterView.java
+    public void startManaRegeneration() {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                currentMana = Math.min(currentMana + 20, maxMana);
+                if (manaBar != null) {
+                    manaBar.setMana(currentMana);
+                }
+                postDelayed(this, 1000); // Regenerate mana every second
+            }
+        });
+    }
+    public int getCurrentMana() {
+        return currentMana;
+    }
+
+    public int getMaxMana() {
+        return maxMana;
+    }
+
+    public AnimationDrawable getCurrentDrawable() {
+        return animationDrawable;
+    }
+
+
+    public float getCharacterX() {
+        return  imageX;
+    }
+
+    public float getCharacterY() {
+        return  imageY;
     }
 }
