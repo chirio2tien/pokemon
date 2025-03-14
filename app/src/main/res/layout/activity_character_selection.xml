@@ -42,7 +42,7 @@
         android:layout_marginTop="104dp"
         android:contentDescription="Character 2"
         android:padding="8dp"
-        android:src="@drawable/gardevoir"
+        android:src="@drawable/gardervoid"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
