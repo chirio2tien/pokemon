@@ -12,6 +12,7 @@ package com.example.pokemomproj;
             @Override
             protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
+                getSupportActionBar().hide();
                 setContentView(R.layout.activity_character_selection);
 
                 ImageView character1 = findViewById(R.id.character1);
