@@ -90,6 +90,7 @@ public class skill1 extends View {
         });
     }
 
+
     private void removeSelf() {
         ViewGroup parent = (ViewGroup) getParent();
         if (parent != null) {
@@ -109,11 +110,11 @@ public class skill1 extends View {
                     ((ViewGroup) getParent()).removeView(this);
                 }
 
+
             }
 
 
         }
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {

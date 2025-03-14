@@ -32,7 +32,15 @@ public class CharacterView extends View {
     private AnimationDrawable currentDrawable;
     private AnimationDrawable previousDrawable;
 
+    private AnimationDrawable skillDrawable1;
+
+    private int maxMana = 100;
+    private int currentMana = 100;
+    private mana_bar manaBar;
+
+
     private skill1 fireballSkill;
+
 
     public CharacterView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -45,7 +53,7 @@ public class CharacterView extends View {
     }
 
     private void initAnimations(Context context) {
-        String characterName = "giratina"; // Ensure this matches your drawable names
+        String characterName = "gardervoid"; // Ensure this matches your drawable names
 
         animationDrawableUp = createAnimationDrawable(context, characterName, "u");
         animationDrawableDown = createAnimationDrawable(context, characterName, "d");
@@ -108,11 +116,13 @@ public class CharacterView extends View {
             Log.e(TAG, "currentDrawable is null in onDraw");
         }
     }
+
     public void setPlayerPosition(float x, float y) {
         this.characterX = x;
         this.characterY = y;
         postInvalidate();
     }
+
     public void move(float xPercent, float yPercent) {
         float newX = characterX + xPercent * 10;
         float newY = characterY + yPercent * 10;
@@ -164,21 +174,19 @@ public class CharacterView extends View {
             Log.e(TAG, "currentDrawable is null in move");
         }
     }
+
     public Node getPlayerPosition() {
         return new Node((int) (characterX / 50), (int) (characterY / 50));
     }
-    // Add these fields to CharacterView.java
-    private int maxMana = 100;
-    private int currentMana = 100;
-    private mana_bar manaBar;
 
-    // Add this method to CharacterView.java
     public void setManaBar(mana_bar manaBar) {
         this.manaBar = manaBar;
     }
 
+
     // Add this method to CharacterView.java
     public void reduceMana(int amount) {
+
         currentMana = Math.max(currentMana - amount, 0);
 
             if (manaBar != null) {
@@ -192,7 +200,6 @@ public class CharacterView extends View {
         }
     }
 
-    // Add this method to CharacterView.java
     public void startManaRegeneration() {
         post(new Runnable() {
             @Override
@@ -206,7 +213,7 @@ public class CharacterView extends View {
         });
     }
 
-    // Update the useSkill1 method in CharacterView.java
+
 
 
     public int getCurrentMana() {
