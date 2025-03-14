@@ -17,23 +17,30 @@ import java.util.Objects;
 public class CharacterView extends View {
 
     private static final String TAG = "CharacterView";
+
+
     private float characterX;
     private float characterY;
-    private AnimationDrawable animationDrawableUp;
-    private AnimationDrawable animationDrawableDown;
-    private AnimationDrawable animationDrawableLeft;
-    private AnimationDrawable animationDrawableRight;
-    private AnimationDrawable animationDrawableUpRight;
-    private AnimationDrawable animationDrawableUpLeft;
-    private AnimationDrawable animationDrawableDownRight;
-    private AnimationDrawable animationDrawableDownLeft;
+    public AnimationDrawable animationDrawableUp;
+    public AnimationDrawable animationDrawableDown;
+    public AnimationDrawable animationDrawableLeft;
+    public AnimationDrawable animationDrawableRight;
+    public AnimationDrawable animationDrawableUpRight;
+    public AnimationDrawable animationDrawableUpLeft;
+    public AnimationDrawable animationDrawableDownRight;
+    public AnimationDrawable animationDrawableDownLeft;
     private AnimationDrawable currentDrawable;
     private AnimationDrawable previousDrawable;
+
     private AnimationDrawable skillDrawable1;
 
     private int maxMana = 100;
     private int currentMana = 100;
     private mana_bar manaBar;
+
+
+    private skill1 fireballSkill;
+
 
     public CharacterView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -42,6 +49,7 @@ public class CharacterView extends View {
 
         initAnimations(context);
         startAnimation();
+
     }
 
     private void initAnimations(Context context) {
@@ -175,10 +183,20 @@ public class CharacterView extends View {
         this.manaBar = manaBar;
     }
 
-    private void reduceMana(int amount) {
+
+    // Add this method to CharacterView.java
+    public void reduceMana(int amount) {
+
         currentMana = Math.max(currentMana - amount, 0);
-        if (manaBar != null) {
-            manaBar.setMana(currentMana);
+
+            if (manaBar != null) {
+                manaBar.setMana(currentMana);
+            }
+
+
+        if (currentMana == 0) {
+            Log.d(TAG, "Mana is depleted. Handling mana depletion.");
+            // Handle mana depletion logic here
         }
     }
 
@@ -195,52 +213,27 @@ public class CharacterView extends View {
         });
     }
 
-    public skill1 useSkill1() {
-        skill1 fireballSkill = null;
-        if (currentMana >= maxMana * 0.2) {
-            Log.d(TAG, "Skill 1 used!");
-            reduceMana((int) (maxMana * 0.2));
 
-            float directionX = 0;
-            float directionY = 0;
 
-            if (currentDrawable == animationDrawableUp) {
-                directionY = -1;
-            } else if (currentDrawable == animationDrawableDown) {
-                directionY = 1;
-            } else if (currentDrawable == animationDrawableLeft) {
-                directionX = -1;
-            } else if (currentDrawable == animationDrawableRight) {
-                directionX = 1;
-            } else if (currentDrawable == animationDrawableUpRight) {
-                directionX = 1;
-                directionY = -1;
-            } else if (currentDrawable == animationDrawableUpLeft) {
-                directionX = -1;
-                directionY = -1;
-            } else if (currentDrawable == animationDrawableDownRight) {
-                directionX = 1;
-                directionY = 1;
-            } else if (currentDrawable == animationDrawableDownLeft) {
-                directionX = -1;
-                directionY = 1;
-            }
 
-            int[] location = new int[2];
-            getLocationOnScreen(location);
-            float startX = location[0] + characterX;
-            float startY = location[1] + characterY;
+    public int getCurrentMana() {
+        return currentMana;
+    }
 
-            Log.d(TAG, "FireballSkill created at position: (" + startX + ", " + startY + ") with direction: (" + directionX + ", " + directionY + ")");
+    public int getMaxMana() {
+        return maxMana;
+    }
 
-            int fireballWidth = 100;
-            int fireballHeight = 100;
+    public AnimationDrawable getCurrentDrawable() {
+        return currentDrawable;
+    }
 
-            fireballSkill = new skill1(getContext(), startX, startY, directionX, directionY, fireballWidth, fireballHeight);
-            ((ViewGroup) getParent()).addView(fireballSkill);
-        } else {
-            Log.d(TAG, "Not enough mana to use Skill 1");
-        }
-        return fireballSkill;
+
+    public float getCharacterX() {
+        return  characterX;
+    }
+
+    public float getCharacterY() {
+        return  characterY;
     }
 }

@@ -14,7 +14,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean isPaused = false;
     private BotView botView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
         characterView.setManaBar(characterManaBar);
         characterView.startManaRegeneration();
 
+        mana_bar botManaBar = findViewById(R.id.botManaBar);
+        botView.setManaBar(botManaBar);
+        botView.startManaRegeneration();
+
         hp_bar botHpBar = findViewById(R.id.botHpBar);
         botView.setHpBar(botHpBar);
 
@@ -42,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
         skillButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                skill1 fireballSkill = characterView.useSkill1();
-                fireballSkill.setBotView(botView);
+                skill1 fireballSkill = skill1.createSkill(characterView);
+                if(fireballSkill != null) {
+                    fireballSkill.setBotView(botView);
+                }
             }
         });
 
