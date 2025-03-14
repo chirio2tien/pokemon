@@ -35,7 +35,7 @@ public class skill1 extends View {
         Log.d(TAG, "FireballSkill created at position: (" + startX + ", " + startY + ") with direction: (" + directionX + ", " + directionY + ")");
 
         initFireballAnimation(context);
-          startAnimation();
+        startAnimation();
     }
 
     private void initFireballAnimation(Context context) {
@@ -90,7 +90,6 @@ public class skill1 extends View {
         });
     }
 
-
     private void removeSelf() {
         ViewGroup parent = (ViewGroup) getParent();
         if (parent != null) {
@@ -110,11 +109,11 @@ public class skill1 extends View {
                     ((ViewGroup) getParent()).removeView(this);
                 }
 
-
             }
 
 
         }
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
