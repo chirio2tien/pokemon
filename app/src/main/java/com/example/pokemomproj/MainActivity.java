@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private CharacterView characterView;
+    private boolean isPaused = false;
     private BotView botView;
 
 

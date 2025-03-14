@@ -64,20 +64,20 @@ public class skill1 extends View {
         });
     }
 
-    private void checkCollision() {
-        if (botView != null) {
-            float botX = botView.getBotX();
-            float botY = botView.getBotY();
-            float botWidth = botView.getWidth();
-            float botHeight = botView.getHeight();
+        private void checkCollision() {
+            if (botView != null) {
+                float botX = botView.getBotX();
+                float botY = botView.getBotY();
+                float botWidth = botView.getWidth();
+                float botHeight = botView.getHeight();
 
-            if (fireballX < botX + botWidth && fireballX + fireballWidth > botX &&
-                    fireballY < botY + botHeight && fireballY + fireballHeight > botY) {
-                botView.reduceHp(20); // Reduce bot's HP by 20%
-                ((ViewGroup) getParent()).removeView(this); // Remove the fireball after collision
+                if (fireballX < botX + botWidth && fireballX + fireballWidth > botX &&
+                        fireballY < botY + botHeight && fireballY + fireballHeight > botY) {
+                    botView.reduceHp(20); // Reduce bot's HP by 20%
+                    ((ViewGroup) getParent()).removeView(this); // Remove the fireball after collision
+                }
             }
         }
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {
