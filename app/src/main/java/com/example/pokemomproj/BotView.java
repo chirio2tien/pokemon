@@ -40,6 +40,9 @@ public class BotView extends View {
     private float botY;
 
 
+    private CharacterView characterView;
+
+
     public BotView(Context context, AttributeSet attrs) {
         super(context, attrs);
         imageX = 1200;
@@ -61,12 +64,23 @@ public class BotView extends View {
             }
         };
         handler.post(invalidateRunnable);
+
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }, 5000);
         invalidateRunnable = new Runnable() {
             @Override
             public void run() {
 
-                if (random.nextFloat() < 0.50) { // 25% chance
-                    skill1 fireballSkill = skill1.botUseSkill(BotView.this);
+                if (random.nextFloat() < 0.5) { // 25% chance
+                    skill1 fireballSkill = skill1.botUseSkill(BotView.this,characterView);
+                    if (fireballSkill != null) {
+                        fireballSkill.setCharacterView(characterView);
+                    }
                 }
 
                 handler.postDelayed(this, random.nextInt(500) + 500); // Random delay between 0.5 to 3 seconds
@@ -287,5 +301,8 @@ public class BotView extends View {
 
     public float getCharacterY() {
         return  imageY;
+    }
+    public void setCharacterView(CharacterView characterView) {
+        this.characterView = characterView;
     }
 }
