@@ -35,7 +35,7 @@ public class skill1 extends View {
         Log.d(TAG, "FireballSkill created at position: (" + startX + ", " + startY + ") with direction: (" + directionX + ", " + directionY + ")");
 
         initFireballAnimation(context);
-          startAnimation();
+        startAnimation();
     }
 
     private void initFireballAnimation(Context context) {
