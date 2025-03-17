@@ -1,33 +1,49 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Select Your Character"
-            android:textSize="24sp"
-            android:layout_gravity="center"
-            android:paddingBottom="16dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="24dp"
+        android:paddingBottom="16dp"
+        android:text="Select Your Character"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/character1"
-            android:layout_width="249dp"
-            android:layout_height="164dp"
-            android:layout_gravity="center"
-            android:contentDescription="Character 1"
-            android:padding="8dp"
-            android:src="@drawable/giratina" />
+    <ImageView
+        android:id="@+id/character1"
+        android:layout_width="161dp"
+        android:layout_height="162dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="104dp"
+        android:contentDescription="Character 1"
+        android:padding="8dp"
+        android:src="@drawable/giratina"
+        app:layout_constraintEnd_toStartOf="@+id/character2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/character2"
-            android:layout_width="257dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:contentDescription="Character 2"
-            android:padding="8dp"
-            android:src="@drawable/gardevoir" />
+    <ImageView
+        android:id="@+id/character2"
+        android:layout_width="145dp"
+        android:layout_height="169dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="248dp"
+        android:layout_marginTop="104dp"
+        android:contentDescription="Character 2"
+        android:padding="8dp"
+        android:src="@drawable/gardervoid"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
