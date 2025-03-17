@@ -12,7 +12,6 @@ package com.example.pokemomproj;
     import androidx.core.content.ContextCompat;
 
     import java.util.Objects;
-
     public class CharacterView extends View {
 
         private static final String TAG = "CharacterView";
@@ -33,6 +32,10 @@ package com.example.pokemomproj;
         private int maxMana = 100;
         private int currentMana = 100;
         private mana_bar manaBar;
+        private hp_bar hpBar;
+
+        private int maxHp = 100;
+        private int currentHp = 100;
 
         public CharacterView(Context context, AttributeSet attrs) {
             super(context, attrs);
@@ -221,7 +224,7 @@ package com.example.pokemomproj;
             initAnimations(getContext(), characterName);
             startAnimation();
         }
-    }
+    
 
    
     public void setHpBar(hp_bar hpBar) {
