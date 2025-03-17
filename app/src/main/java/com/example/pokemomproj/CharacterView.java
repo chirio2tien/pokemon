@@ -37,8 +37,9 @@ public class CharacterView extends View {
     private int maxMana = 100;
     private int currentMana = 100;
     private mana_bar manaBar;
-
-
+    private hp_bar hpBar;
+    private int maxHp = 100;
+    private int currentHp = 100;
     private skill1 fireballSkill;
 
 
@@ -53,7 +54,7 @@ public class CharacterView extends View {
     }
 
     private void initAnimations(Context context) {
-        String characterName = "gardervoid"; // Ensure this matches your drawable names
+        String characterName = "giratina"; // Ensure this matches your drawable names
 
         animationDrawableUp = createAnimationDrawable(context, characterName, "u");
         animationDrawableDown = createAnimationDrawable(context, characterName, "d");
@@ -236,4 +237,47 @@ public class CharacterView extends View {
     public float getCharacterY() {
         return  characterY;
     }
+    public void setHpBar(hp_bar hpBar) {
+        this.hpBar = hpBar;
+    }
+    public void reduceHp(int percentage) {
+        currentHp = Math.max(currentHp - (maxHp * percentage / 100), 0);
+        if (hpBar != null) {
+            hpBar.setHp(currentHp);
+        }
+        if (currentHp == 0) {
+            Log.d(TAG, "Bot HP is zero. Handling bot defeat.");
+            // Handle bot defeat logic here
+        }
+
+    }
+    public boolean checkCollision(float x, float y, float width, float height) {
+        float Left = characterX - currentDrawable.getIntrinsicWidth() / 2;
+        float Right = characterX + currentDrawable.getIntrinsicWidth() / 2;
+        float Top = characterY - currentDrawable.getIntrinsicHeight() / 2;
+        float Bottom = characterY + currentDrawable.getIntrinsicHeight() / 2;
+
+        float skillLeft = x-460;
+        float skillRight = x-460 + width;
+        float skillTop = y-130;
+        float skillBottom = y-130 + height;
+        Log.e("skillbot", "x: " + x + " y: " + y + "characterX: " + characterX + " characterY: " + characterY);
+        return !(skillLeft > Right || skillRight < Left || skillTop > Bottom || skillBottom < Top);
+    }
+    public void healHp(int amount) {
+        int maxHp = 100; // Lấy HP tối đa của nhân vật
+        currentHp += amount; // Hồi máu
+        if (currentHp > maxHp) {
+            currentHp = maxHp; // Giới hạn HP không vượt quá tối đa
+            if (hpBar != null) {
+                hpBar.setHp(currentHp);
+            }
+        }
+        Log.d("CharacterView", "Healed " + amount + " HP. Current HP: " + currentHp);
+    }
+    public void useHealSkill() {
+        skill2 healSkill = new skill2(getContext(), this);
+        healSkill.startHealing();
+    }
+
 }

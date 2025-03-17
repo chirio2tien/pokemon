@@ -2,6 +2,7 @@ package com.example.pokemomproj;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         }
         characterView = findViewById(R.id.characterView);
         botView = findViewById(R.id.botView);
-
+        botView.setCharacterView(characterView);
         mana_bar characterManaBar = findViewById(R.id.characterManaBar);
         characterView.setManaBar(characterManaBar);
         characterView.startManaRegeneration();
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
         hp_bar botHpBar = findViewById(R.id.botHpBar);
         botView.setHpBar(botHpBar);
 
+        hp_bar characterHpBar = findViewById(R.id.characterHpBar);
+        characterView.setHpBar(characterHpBar);
+
         Button skillButton1 = findViewById(R.id.skillButton1);
         skillButton1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +55,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Button btnHealSkill = findViewById(R.id.btnHealSkill);
+        btnHealSkill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Skill2", "Button heal skill clicked!");
+                characterView.useHealSkill();
+            }
+        });
+
+
 
         JoystickView joystickView = findViewById(R.id.joystickView);
         joystickView.setJoystickListener(new JoystickView.JoystickListener() {
