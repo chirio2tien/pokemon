@@ -2,6 +2,7 @@ package com.example.pokemomproj;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
@@ -13,7 +14,6 @@ public class MainActivity extends AppCompatActivity {
     private CharacterView characterView;
     private boolean isPaused = false;
     private BotView botView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,23 +29,48 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         characterView = findViewById(R.id.characterView);
-        botView = findViewById(R.id.botView);
+        String characterName = getIntent().getStringExtra("characterName");
+        if (characterName != null) {
+            characterView.setCharacterName(characterName);
+        }
 
+        botView = findViewById(R.id.botView);
+        botView.setCharacterView(characterView);
         mana_bar characterManaBar = findViewById(R.id.characterManaBar);
         characterView.setManaBar(characterManaBar);
         characterView.startManaRegeneration();
 
+        mana_bar botManaBar = findViewById(R.id.botManaBar);
+        botView.setManaBar(botManaBar);
+        botView.startManaRegeneration();
+
         hp_bar botHpBar = findViewById(R.id.botHpBar);
         botView.setHpBar(botHpBar);
+
+        hp_bar characterHpBar = findViewById(R.id.characterHpBar);
+        characterView.setHpBar(characterHpBar);
 
         Button skillButton1 = findViewById(R.id.skillButton1);
         skillButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                skill1 fireballSkill = characterView.useSkill1();
-                fireballSkill.setBotView(botView);
+                skill1 fireballSkill = skill1.createSkill(characterView);
+                if(fireballSkill != null) {
+                    fireballSkill.setBotView(botView);
+                }
             }
         });
+
+        Button btnHealSkill = findViewById(R.id.btnHealSkill);
+        btnHealSkill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Skill2", "Button heal skill clicked!");
+                characterView.useHealSkill();
+            }
+        });
+
+
 
         JoystickView joystickView = findViewById(R.id.joystickView);
         joystickView.setJoystickListener(new JoystickView.JoystickListener() {
