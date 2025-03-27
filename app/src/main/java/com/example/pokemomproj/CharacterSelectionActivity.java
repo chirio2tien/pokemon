@@ -2,10 +2,15 @@ package com.example.pokemomproj;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import android.view.View;
 import android.widget.ImageView;
+
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class CharacterSelectionActivity extends AppCompatActivity {
+
 
     private final int[] characterImageViewIds = {
             R.id.character1, R.id.character2, R.id.character3,
@@ -17,11 +22,13 @@ public class CharacterSelectionActivity extends AppCompatActivity {
             "urshifu", "pikachu", "psyduck"
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_character_selection);
+
 
         setupCharacterSelections();
     }
@@ -32,6 +39,7 @@ public class CharacterSelectionActivity extends AppCompatActivity {
             ImageView characterImage = findViewById(characterImageViewIds[i]);
             characterImage.setOnClickListener(v -> selectCharacter(characterName));
         }
+
     }
 
     private void selectCharacter(String characterName) {
