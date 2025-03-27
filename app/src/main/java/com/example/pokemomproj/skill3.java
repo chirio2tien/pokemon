@@ -12,44 +12,44 @@ import android.view.ViewGroup;
 
 import androidx.core.content.ContextCompat;
 
-public class skill2 extends View {
-    private static final String TAG = "FireballSkill";
-    private float fireballX;
-    private float fireballY;
+public class skill3 extends View {
+    private static final String TAG = "earthquakeSkill";
+    private float earthquakeX;
+    private float earthquakeY;
     private float directionX;
     private float directionY;
-    private int fireballWidth;
-    private int fireballHeight;
-    private AnimationDrawable fireballDrawable;
+    private int earthquakeWidth;
+    private int earthquakeHeight;
+    private AnimationDrawable earthquakeDrawable;
     private AnimatedImageDrawable animatedImageDrawable;
     private BotView botView;
 
-    public skill2(Context context, float startX, float startY, float directionX, float directionY, int width, int height) {
+    public skill3(Context context, float startX, float startY, float directionX, float directionY, int width, int height) {
         super(context);
-        this.fireballX = startX;
-        this.fireballY = startY;
+        this.earthquakeX = startX;
+        this.earthquakeY = startY;
         this.directionX = directionX;
         this.directionY = directionY;
-        this.fireballWidth = width;
-        this.fireballHeight = height;
-        Log.d(TAG, "FireballSkill created at position: (" + startX + ", " + startY + ") with direction: (" + directionX + ", " + directionY + ")");
+        this.earthquakeWidth = width;
+        this.earthquakeHeight = height;
+        Log.d(TAG, "earthquakeSkill created at position: (" + startX + ", " + startY + ") with direction: (" + directionX + ", " + directionY + ")");
 
-        initFireballAnimation(context);
+        initearthquakeAnimation(context);
         startAnimation();
     }
 
-    public skill2(Context context) {
+    public skill3(Context context) {
         super(context);
     }
 
-    private void initFireballAnimation(Context context) {
+    private void initearthquakeAnimation(Context context) {
         Drawable drawable = ContextCompat.getDrawable(context, R.drawable.skill1); // Replace with your GIF resource name
         if (drawable instanceof AnimatedImageDrawable) {
             animatedImageDrawable = (AnimatedImageDrawable) drawable;
             animatedImageDrawable.start();
         } else if (drawable instanceof AnimationDrawable) {
-            fireballDrawable = (AnimationDrawable) drawable;
-            fireballDrawable.start();
+            earthquakeDrawable = (AnimationDrawable) drawable;
+            earthquakeDrawable.start();
         } else {
             Log.e(TAG, "Drawable resource is not an AnimatedImageDrawable or AnimationDrawable");
         }
@@ -59,8 +59,8 @@ public class skill2 extends View {
         post(new Runnable() {
             @Override
             public void run() {
-                float nextX = fireballX + directionX * 10;
-                float nextY = fireballY + directionY * 10;
+                float nextX = earthquakeX + directionX * 10;
+                float nextY = earthquakeY + directionY * 10;
 
                 // Lấy kích thước màn hình (map)
                 View parent = (View) getParent();
@@ -69,23 +69,23 @@ public class skill2 extends View {
                     int screenHeight = parent.getHeight();
 
                     // Kiểm tra nếu viên đạn chạm biên trái/phải
-                    if (nextX < 0 || nextX + fireballWidth > screenWidth) {
-                        Log.d("Skill1", "Fireball hit the horizontal boundary!");
+                    if (nextX < 0 || nextX + earthquakeWidth > screenWidth) {
+                        Log.d("Skill1", "earthquake hit the horizontal boundary!");
                         removeSelf(); // Xóa skill nếu chạm biên
                         return;
                     }
 
                     // Kiểm tra nếu viên đạn chạm biên trên/dưới
-                    if (nextY < 0 || nextY + fireballHeight > screenHeight) {
-                        Log.d("Skill1", "Fireball hit the vertical boundary!");
+                    if (nextY < 0 || nextY + earthquakeHeight > screenHeight) {
+                        Log.d("Skill1", "earthquake hit the vertical boundary!");
                         removeSelf(); // Xóa skill nếu chạm biên
                         return;
                     }
                 }
 
                 // Cập nhật vị trí viên đạn
-                fireballX = nextX;
-                fireballY = nextY;
+                earthquakeX = nextX;
+                earthquakeY = nextY;
 
                 checkCollision();
                 invalidate();
@@ -104,7 +104,7 @@ public class skill2 extends View {
     private void checkCollision() {
         if (botView != null) {
 
-            if (botView != null && botView.checkCollision(fireballX, fireballY, fireballWidth, fireballHeight)) {
+            if (botView != null && botView.checkCollision(earthquakeX, earthquakeY, earthquakeWidth, earthquakeHeight)) {
                 Log.d("skill1", "Collision detected with bot!");
                 // Handle collision (e.g., reduce bot HP)
                 botView.reduceHp(30);
@@ -125,14 +125,14 @@ public class skill2 extends View {
         canvas.save();
         if (animatedImageDrawable != null) {
             float angle = (float) Math.toDegrees(Math.atan2(directionY, directionX));
-            canvas.rotate(angle, fireballX, fireballY);
+            canvas.rotate(angle, earthquakeX, earthquakeY);
 
-            int halfWidth = fireballWidth / 2;
-            int halfHeight = fireballHeight / 2;
-            int left = (int) (fireballX - halfWidth);
-            int top = (int) (fireballY - halfHeight);
-            int right = (int) (fireballX + fireballWidth / 2);
-            int bottom = (int) (fireballY + fireballHeight / 2);
+            int halfWidth = earthquakeWidth / 2;
+            int halfHeight = earthquakeHeight / 2;
+            int left = (int) (earthquakeX - halfWidth);
+            int top = (int) (earthquakeY - halfHeight);
+            int right = (int) (earthquakeX + earthquakeWidth / 2);
+            int bottom = (int) (earthquakeY + earthquakeHeight / 2);
 
             animatedImageDrawable.setBounds(left, top, right, bottom);
             animatedImageDrawable.draw(canvas);
@@ -147,7 +147,7 @@ public class skill2 extends View {
     }
     public static skill1 createSkill(CharacterView characterView) {
         if (characterView.getCurrentMana() >= characterView.getMaxMana() * 0.2) {
-            Log.d("Skill1", "Creating fireball skill");
+            Log.d("Skill1", "Creating earthquake skill");
             float directionX = 0;
             float directionY = 0;
 
@@ -178,20 +178,20 @@ public class skill2 extends View {
             float startX = location[0] + characterView.getCharacterX() - 80;
             float startY = location[1] + characterView.getCharacterY();
 
-            int fireballWidth = 100;
-            int fireballHeight = 100;
-            skill1 fireballSkill = new skill1(characterView.getContext(), startX, startY, directionX, directionY, fireballWidth, fireballHeight);
-            ((ViewGroup) characterView.getParent()).addView(fireballSkill);
+            int earthquakeWidth = 100;
+            int earthquakeHeight = 100;
+            skill1 earthquakeSkill = new skill1(characterView.getContext(), startX, startY, directionX, directionY, earthquakeWidth, earthquakeHeight);
+            ((ViewGroup) characterView.getParent()).addView(earthquakeSkill);
 
             characterView.reduceMana((int) (characterView.getMaxMana() * 0.2));
-            return fireballSkill;
+            return earthquakeSkill;
         }
         Log.d("Skill1", "Not enough mana to use Skill 1");
         return null;
     }
     public static skill1 botUseSkill(BotView botView) {
         if (botView.getCurrentMana() >= botView.getMaxMana() * 0.2) {
-            Log.d("Skill1", "Bot using fireball skill");
+            Log.d("Skill1", "Bot using earthquake skill");
             float directionX = 0;
             float directionY = 0;
 
@@ -222,13 +222,13 @@ public class skill2 extends View {
             float startX = location[0] + botView.getCharacterX() - 80;
             float startY = location[1] + botView.getCharacterY();
 
-            int fireballWidth = 100;
-            int fireballHeight = 100;
-            skill1 fireballSkill = new skill1(botView.getContext(), startX, startY, directionX, directionY, fireballWidth, fireballHeight);
-            ((ViewGroup) botView.getParent()).addView(fireballSkill);
+            int earthquakeWidth = 100;
+            int earthquakeHeight = 100;
+            skill1 earthquakeSkill = new skill1(botView.getContext(), startX, startY, directionX, directionY, earthquakeWidth, earthquakeHeight);
+            ((ViewGroup) botView.getParent()).addView(earthquakeSkill);
 
             botView.reduceMana((int) (botView.getMaxMana() * 0.2));
-            return fireballSkill;
+            return earthquakeSkill;
         }
         Log.d("Skill1", "Not enough mana to use Skill 1");
         return null;
