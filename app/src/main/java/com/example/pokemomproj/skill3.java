@@ -189,7 +189,7 @@ public class skill3 extends View {
         Log.d("Skill1", "Not enough mana to use Skill 1");
         return null;
     }
-    public static skill1 botUseSkill(BotView botView) {
+    public static skill1 botUseSkill(BotView botView) {git checkout -b
         if (botView.getCurrentMana() >= botView.getMaxMana() * 0.2) {
             Log.d("Skill1", "Bot using earthquake skill");
             float directionX = 0;
