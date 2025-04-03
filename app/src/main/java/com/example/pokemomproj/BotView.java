@@ -205,13 +205,7 @@ public class BotView extends View {
         invalidate();
     }
 
-    public float getBotX() {
-        return botX;
-    }
 
-    public float getBotY() {
-        return botY;
-    }
 
     public void setHpBar(hp_bar hpBar) {
         this.hpBar = hpBar;
@@ -304,5 +298,12 @@ public class BotView extends View {
     }
     public void setCharacterView(CharacterView characterView) {
         this.characterView = characterView;
+    }
+
+    public void setCharacterX(float imageX) {
+        this.imageX = imageX;
+    }
+    public void setCharacterY(float imageY) {
+        this.imageY = imageY;
     }
 }
