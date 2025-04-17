@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.widget.Button;
@@ -71,6 +72,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+        Button btnEarthQuakeSkill2 = findViewById(R.id.btnEarthQuakeSkill2);
+        btnEarthQuakeSkill2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                skill4 earthquakeSkill = new skill4(MainActivity.this, characterView);
+                ((ViewGroup) characterView.getParent()).addView(earthquakeSkill);
+                earthquakeSkill.setBotView(botView);
+                earthquakeSkill.startDamage();
+            }
+        });
 
         JoystickView joystickView = findViewById(R.id.joystickView);
         joystickView.setJoystickListener(new JoystickView.JoystickListener() {

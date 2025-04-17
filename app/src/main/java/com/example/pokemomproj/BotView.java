@@ -104,6 +104,7 @@ public class BotView extends View {
         animationDrawable = animationDrawableDown;
         animationDrawable.setOneShot(false);
         animationDrawable.start();
+        setTranslationZ(1);
     }
 
     private AnimationDrawable createAnimationDrawable(Context context, String characterName, String direction) {
@@ -205,13 +206,7 @@ public class BotView extends View {
         invalidate();
     }
 
-    public float getBotX() {
-        return botX;
-    }
 
-    public float getBotY() {
-        return botY;
-    }
 
     public void setHpBar(hp_bar hpBar) {
         this.hpBar = hpBar;

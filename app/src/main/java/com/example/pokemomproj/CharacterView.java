@@ -61,6 +61,7 @@ package com.example.pokemomproj;
             previousDrawable = currentDrawable;
             currentDrawable.setOneShot(false);
             currentDrawable.start();
+            setTranslationZ(1);
         }
 
         private AnimationDrawable createAnimationDrawable(Context context, String characterName, String direction) {
@@ -258,17 +259,16 @@ package com.example.pokemomproj;
         int maxHp = 100; // Lấy HP tối đa của nhân vật
         currentHp += amount; // Hồi máu
         if (currentHp > maxHp) {
-            currentHp = maxHp; // Giới hạn HP không vượt quá tối đa
-            if (hpBar != null) {
-                hpBar.setHp(currentHp);
-            }
+            currentHp = maxHp; // Giới hạn HP không vượt quá tối đav
         }
+        hpBar.setHp(currentHp);
         Log.d("CharacterView", "Healed " + amount + " HP. Current HP: " + currentHp);
     }
     public void useHealSkill() {
         skill2 healSkill = new skill2(getContext(), this);
         healSkill.startHealing();
     }
+
 
 }
 
