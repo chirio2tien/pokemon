@@ -265,7 +265,7 @@ package com.example.pokemomproj;
         Log.d("CharacterView", "Healed " + amount + " HP. Current HP: " + currentHp);
     }
     public void useHealSkill() {
-        skill2 healSkill = new skill2(getContext(), this);
+        skill2 healSkill = new skill2(getContext(),null,CharacterView.this);
         healSkill.startHealing();
     }
 
