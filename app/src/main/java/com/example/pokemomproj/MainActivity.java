@@ -51,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
         hp_bar characterHpBar = findViewById(R.id.characterHpBar);
         characterView.setHpBar(characterHpBar);
 
+
+        // Thiết lập HP về 0
+         // Thời gian chờ tùy chọn (2 giây)
+
         Button skillButton1 = findViewById(R.id.skillButton1);
         skillButton1.setOnClickListener(new View.OnClickListener() {
             @Override
