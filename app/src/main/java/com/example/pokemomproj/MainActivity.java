@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.widget.Button;
@@ -66,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
         hp_bar characterHpBar = findViewById(R.id.characterHpBar);
         characterView.setHpBar(characterHpBar);
 
+
+        // Thiết lập HP về 0
+         // Thời gian chờ tùy chọn (2 giây)
+
         Button skillButton1 = findViewById(R.id.skillButton1);
         skillButton1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +92,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+        Button btnEarthQuakeSkill2 = findViewById(R.id.btnEarthQuakeSkill2);
+        btnEarthQuakeSkill2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                skill4 earthquakeSkill = new skill4(MainActivity.this, characterView);
+                ((ViewGroup) characterView.getParent()).addView(earthquakeSkill);
+                earthquakeSkill.setBotView(botView);
+                earthquakeSkill.startDamage();
+            }
+        });
 
         JoystickView joystickView = findViewById(R.id.joystickView);
         joystickView.setJoystickListener(new JoystickView.JoystickListener() {

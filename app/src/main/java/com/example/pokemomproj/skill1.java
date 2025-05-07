@@ -197,7 +197,7 @@ public class skill1 extends View {
         Log.d("Skill1", "Not enough mana to use Skill 1");
         return null;
     }
-    public static skill1 botUseSkill(BotView botView, CharacterView characterView) {
+    public static skill1 botUseSkill1(BotView botView, CharacterView characterView) {
         if (botView.getCurrentMana() >= botView.getMaxMana() * 0.2) {
             Log.d("Skill1", "Bot using fireball skill towards player");
 

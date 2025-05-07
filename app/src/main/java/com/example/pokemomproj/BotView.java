@@ -70,25 +70,38 @@ public class BotView extends View {
         };
         handler.post(invalidateRunnable);
 
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
+                // Placeholder for delayed logic if needed
             }
         }, 5000);
+
         invalidateRunnable = new Runnable() {
             @Override
             public void run() {
-
-                if (random.nextFloat() < 0.5) { // 25% chance
-                    skill1 fireballSkill = skill1.botUseSkill(BotView.this,characterView);
+                // 50% chance to use fireball skill
+                if (random.nextFloat() < 0.25) {
+                    skill1 fireballSkill = skill1.botUseSkill1(BotView.this, characterView);
                     if (fireballSkill != null) {
                         fireballSkill.setCharacterView(characterView);
+                        Log.d(TAG, "Bot used fireball skill.");
+                    } else {
+                        Log.d(TAG, "Bot failed to use fireball skill (not enough mana).");
                     }
                 }
 
-                handler.postDelayed(this, random.nextInt(500) + 500); // Random delay between 0.5 to 3 seconds
+
+                // Check if bot needs healing
+                if (random.nextFloat()<0.25&&getCurrentMana() >= 65) {
+                    // Ensure enough mana for healing
+                        skill2 healingSkill = new skill2(getContext(),BotView.this,null);
+                        healingSkill.BotstartHealing(BotView.this);
+
+                }
+
+                // Schedule the next execution with a random delay
+                handler.postDelayed(this, random.nextInt(500) + 1500); // Random delay between 0.5 to 1 second
             }
         };
         handler.post(invalidateRunnable);
@@ -116,6 +129,7 @@ public class BotView extends View {
         animationDrawable = animationDrawableDown;
         animationDrawable.setOneShot(false);
         animationDrawable.start();
+        setTranslationZ(1);
     }
 
     private AnimationDrawable createAnimationDrawable(Context context, String characterName, String direction) {
@@ -311,6 +325,15 @@ public class BotView extends View {
 
     public int getMaxMana() {
         return maxMana;
+    }
+    public void healHp(int amount) {
+        int maxHp = 100; // Lấy HP tối đa của nhân vật
+        currentHp += amount; // Hồi máu
+        if (currentHp > maxHp) {
+            currentHp = maxHp; // Giới hạn HP không vượt quá tối đav
+        }
+        hpBar.setHp(currentHp);
+        Log.d("CharacterView", "Healed " + amount + " HP. Current HP: " + currentHp);
     }
 
     public AnimationDrawable getCurrentDrawable() {
