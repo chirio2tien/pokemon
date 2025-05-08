@@ -35,7 +35,7 @@ dependencies {
         exclude group: 'androidx.annotation', module: 'annotation'
     }
     implementation 'com.airbnb.android:lottie:6.0.0'
-
+    implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.29'
     implementation libs.monitor
     implementation libs.androidx.junit

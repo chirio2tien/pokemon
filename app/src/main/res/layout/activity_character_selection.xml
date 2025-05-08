@@ -4,99 +4,16 @@
     android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="248dp"
-        android:layout_marginTop="40dp"
-        android:paddingBottom="16dp"
-        android:text="Select Your Character"
-        android:textSize="24sp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <ImageView
-        android:id="@+id/character5"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="556dp"
-        android:layout_marginTop="80dp"
-        android:contentDescription="Character 5"
-        android:padding="8dp"
-        android:src="@drawable/pikachu"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/character2"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="328dp"
-        android:layout_marginTop="80dp"
-        android:contentDescription="Character 2"
-        android:padding="8dp"
-        android:src="@drawable/gardervoid"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/character3"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="556dp"
-        android:layout_marginTop="216dp"
-        android:contentDescription="Character 3"
-        android:padding="8dp"
-        android:src="@drawable/incineroar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/character4"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="328dp"
-        android:layout_marginTop="216dp"
-        android:contentDescription="Character 4"
-        android:padding="8dp"
-        android:src="@drawable/urshifu"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/character6"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="216dp"
-        android:contentDescription="Character 6"
-        android:padding="8dp"
-        android:src="@drawable/psyduck"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/character1"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="80dp"
-        android:contentDescription="Character 1"
-        android:padding="8dp"
-        android:src="@drawable/giratina"
-        app:layout_constraintEnd_toStartOf="@+id/character2"
-        app:layout_constraintHorizontal_bias="0.178"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

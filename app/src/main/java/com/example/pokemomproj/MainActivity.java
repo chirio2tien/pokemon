@@ -1,7 +1,9 @@
 package com.example.pokemomproj;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +15,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private CharacterView characterView;
-    private boolean isPaused = false;
+
     private BotView botView;
+    private int currentHp = 100; // Khởi tạo giá trị HP mặc định
+    private int currentMana = 100;
+    private int botcurrentHp = 100; // Khởi tạo giá trị HP mặc định
+    private int botcurrentMana = 100; // Khởi tạo giá trị Mana mặc định
+    private float imageX = 1200;
+    private float imageY= 600;
+    private hp_bar hpBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +38,13 @@ public class MainActivity extends AppCompatActivity {
                 insetsController.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
             }
         }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }, 3000); // Delay 3 giây
+
         characterView = findViewById(R.id.characterView);
         String characterName = getIntent().getStringExtra("characterName");
         if (characterName != null) {
@@ -96,4 +112,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences prefs = getSharedPreferences("GameData", MODE_PRIVATE);
+        currentHp = prefs.getInt("currentHp", 100);
+        imageX = prefs.getFloat("imageX", 1200);
+        imageY = prefs.getFloat("imageY", 600);
+        botView.setCharacterX(imageX);
+        botView.setCharacterY(imageY);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences prefs = getSharedPreferences("GameData", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("currentHp", currentHp);
+        editor.putFloat("imageX", botView.getCharacterX());
+        editor.putFloat("imageY", botView.getCharacterY());
+        editor.apply();
+    }
+
 }

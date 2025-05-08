@@ -2,6 +2,8 @@ package com.example.pokemomproj;
 
     import android.annotation.SuppressLint;
     import android.content.Context;
+    import android.content.Intent;
+    import android.content.SharedPreferences;
     import android.graphics.Canvas;
     import android.graphics.drawable.AnimationDrawable;
     import android.util.AttributeSet;
@@ -231,14 +233,24 @@ package com.example.pokemomproj;
     public void setHpBar(hp_bar hpBar) {
         this.hpBar = hpBar;
     }
+    private boolean isDead = false;
     public void reduceHp(int percentage) {
+        if (isDead) return;
         currentHp = Math.max(currentHp - (maxHp * percentage / 100), 0);
         if (hpBar != null) {
             hpBar.setHp(currentHp);
         }
-        if (currentHp == 0) {
-            Log.d(TAG, "Bot HP is zero. Handling bot defeat.");
-            // Handle bot defeat logic here
+        if (currentHp == 0 && !isDead) {
+            isDead = true;
+            SharedPreferences prefs = getContext().getSharedPreferences("GameData", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("currentHp", 0);  // Lưu trạng thái chết
+
+            editor.apply();
+            Intent intent = new Intent(getContext(), CharacterSelectionActivity.class);
+            getContext().startActivity(intent);
+
+            ((MainActivity) getContext()).finish();
         }
 
     }

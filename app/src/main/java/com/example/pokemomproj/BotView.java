@@ -38,9 +38,14 @@ public class BotView extends View {
     private hp_bar hpBar;
     private float botX;
     private float botY;
-
+    private String characterName;
+    private final String[] characterNames = {
+            "giratina", "gardervoid", "incineroar",
+            "urshifu", "pikachu", "psyduck"
+    };
 
     private CharacterView characterView;
+    private Context context;
 
 
     public BotView(Context context, AttributeSet attrs) {
@@ -103,7 +108,14 @@ public class BotView extends View {
     }
 
     private void initAnimations(Context context) {
-        String characterName = "giratina"; // Ensure this matches your drawable names
+        if (context == null) {
+            Log.e(TAG, "initAnimations: Context is null!");
+            return;
+        }
+
+        Random random = new Random();
+        int index = random.nextInt(characterNames.length);
+        characterName = characterNames[index];
 
         animationDrawableUp = createAnimationDrawable(context, characterName, "u");
         animationDrawableDown = createAnimationDrawable(context, characterName, "d");
@@ -231,8 +243,25 @@ public class BotView extends View {
             hpBar.setHp(currentHp);
         }
         if (currentHp == 0) {
+            hpBar.setHp(100);
+            currentHp = 100;
+
+            post(new Runnable() {
+                @Override
+                public void run() {
+
+
+                    if (getContext() != null) {
+                        initAnimations(getContext());
+                        invalidate();
+                    } else {
+                        Log.e(TAG, "Context is null! Cannot reinitialize animations.");
+                    }
+                }
+            });
+            imageX = 1200;
+            imageY = 600;
             Log.d(TAG, "Bot HP is zero. Handling bot defeat.");
-            // Handle bot defeat logic here
         }
 
     }
@@ -321,5 +350,12 @@ public class BotView extends View {
     }
     public void setCharacterView(CharacterView characterView) {
         this.characterView = characterView;
+    }
+
+    public void setCharacterX(float imageX) {
+        this.imageX = imageX;
+    }
+    public void setCharacterY(float imageY) {
+        this.imageY = imageY;
     }
 }
