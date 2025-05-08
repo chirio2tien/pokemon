@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class ImageOnlyAdapter extends
-        RecyclerView.Adapter<ImageOnlyAdapter.ViewHolder> {
+public class ImageItem extends
+        RecyclerView.Adapter<ImageItem.ViewHolder> {
     public static class HinhAnh {
         private String tenHinh;
         private int resourceId;
@@ -44,7 +44,7 @@ public class ImageOnlyAdapter extends
     private Context context;
     private ArrayList<HinhAnh> dsHinh; // danh sách resource ID hình ảnh
 
-    public ImageOnlyAdapter(Context context, ArrayList<HinhAnh> dsHinh) {
+    public ImageItem(Context context, ArrayList<HinhAnh> dsHinh) {
         this.context = context;
         this.dsHinh = dsHinh;
     }

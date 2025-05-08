@@ -9,10 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
@@ -52,7 +50,7 @@ public class CharacterSelectionActivity extends AppCompatActivity {
             dsHinh = gson.fromJson(json, type);
         } else {
             // Nếu chưa có dữ liệu, tạo danh sách mặc định
-            dsHinh = new ArrayList<>();
+            dsHinh = new ArrayList<>(pikachuuuuuuuuuuuuuu);
             dsHinh.add(new ImageOnlyAdapter.HinhAnh("psyduck", R.drawable.psyduck));
             dsHinh.add(new ImageOnlyAdapter.HinhAnh("pikachu", R.drawable.pikachu));
             dsHinh.add(new ImageOnlyAdapter.HinhAnh("incineroar", R.drawable.incineroar));
