@@ -23,7 +23,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewImage"
+        android:id="@+id/recyclerViewImageItem"
         android:layout_width="525dp"
         android:layout_height="150dp"
         app:layout_constraintBottom_toBottomOf="parent"

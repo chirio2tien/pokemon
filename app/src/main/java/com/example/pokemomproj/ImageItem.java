@@ -12,20 +12,20 @@ import java.util.ArrayList;
 
 public class ImageItem extends
         RecyclerView.Adapter<ImageItem.ViewHolder> {
-    public static class HinhAnh {
+    public static class item {
         private String tenHinh;
         private int resourceId;
 
-        public HinhAnh(String tenHinh, int resourceId) {
+        public item(String tenHinh, int resourceId) {
             this.tenHinh = tenHinh;
             this.resourceId = resourceId;
         }
 
-        public String getTenHinh() {
+        public String gettenitem() {
             return tenHinh;
         }
 
-        public int getResourceId() {
+        public int getitem() {
             return resourceId;
         }
     }
@@ -42,9 +42,9 @@ public class ImageItem extends
 
 
     private Context context;
-    private ArrayList<HinhAnh> dsHinh; // danh sách resource ID hình ảnh
+    private ArrayList<item> dsHinh; // danh sách resource ID hình ảnh
 
-    public ImageItem(Context context, ArrayList<HinhAnh> dsHinh) {
+    public ImageItem(Context context, ArrayList<item> dsHinh) {
         this.context = context;
         this.dsHinh = dsHinh;
     }
@@ -66,7 +66,7 @@ public class ImageItem extends
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.imageView.setImageResource(dsHinh.get(position).getResourceId());
+        holder.imageView.setImageResource(dsHinh.get(position).getitem());
 
         holder.imageView.setOnClickListener(v -> {
             if (listener != null) {

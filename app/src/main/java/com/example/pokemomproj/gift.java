@@ -29,57 +29,58 @@ public class gift extends AppCompatActivity {
                 super.onCreate(savedInstanceState);
                 getSupportActionBar().hide();
                 setContentView(R.layout.gift);
-               RecyclerView recyclerView = findViewById(R.id.recyclerViewImage);recyclerView.setLayoutManager(new GridLayoutManager(this, 4)); // 4 cột
+               RecyclerView recyclerView = findViewById(R.id.recyclerViewImageItem);
+               recyclerView.setLayoutManager(new GridLayoutManager(this, 4)); // 4 cột
 
 
-                SharedPreferences pref = getSharedPreferences("dsHinh_pref", MODE_PRIVATE);
-                String json = pref.getString("dsHinh_data", null);
+                final  SharedPreferences pref = getSharedPreferences("dsitem_pref", MODE_PRIVATE);
+                String json = pref.getString("dsitem_data", null);
 
-                ArrayList<ImageOnlyAdapter.HinhAnh> dsHinh;
-                Gson gson = new Gson();
+                final  ArrayList<ImageItem.item> dsHinhitem;
+                final   Gson gson = new Gson();
 
                 if (json != null) {
                     // Tạo lại danh sách từ chuỗi JSON
-                    Type type = new TypeToken<ArrayList<ImageOnlyAdapter.HinhAnh>>() {}.getType();
-                    dsHinh = gson.fromJson(json, type);
+                    Type type = new TypeToken<ArrayList<ImageItem.item>>() {}.getType();
+                    dsHinhitem = gson.fromJson(json, type);
                 } else {
                     // Nếu chưa có dữ liệu, tạo danh sách mặc định
-                    dsHinh = new ArrayList<>();
-                    dsHinh.add(new ImageOnlyAdapter.HinhAnh("g_aspear_berry", R.drawable.g_aspear_berry));
-                    dsHinh.add(new ImageOnlyAdapter.HinhAnh("g_berry_sprite", R.drawable.g_berry_sprite));
-                    dsHinh.add(new ImageOnlyAdapter.HinhAnh("g_leppa_berry", R.drawable.g_leppa_berry));
-                    dsHinh.add(new ImageOnlyAdapter.HinhAnh("g_lum_berry", R.drawable.g_lum_berry));
-                    dsHinh.add(new ImageOnlyAdapter.HinhAnh("g_oran_berry", R.drawable.g_oran_berry));
-                    dsHinh.add(new ImageOnlyAdapter.HinhAnh("g_pecha_berry", R.drawable.g_pecha_berry));
-                    dsHinh.add(new ImageOnlyAdapter.HinhAnh("g_persim_berry", R.drawable.g_persim_berry));
-                    dsHinh.add(new ImageOnlyAdapter.HinhAnh("g_petaya_berry", R.drawable.g_petaya_berry));
-                    dsHinh.add(new ImageOnlyAdapter.HinhAnh("g_sitrus_berry", R.drawable.g_sitrus_berry));
+                    dsHinhitem = new ArrayList<>();
+                    dsHinhitem.add(new ImageItem.item("g_aspear_berry", R.drawable.g_aspear_berry));
+                    dsHinhitem.add(new ImageItem.item("g_berry_sprite", R.drawable.g_berry_sprite));
+                    dsHinhitem.add(new ImageItem.item("g_leppa_berry", R.drawable.g_leppa_berry));
+                    dsHinhitem.add(new ImageItem.item("g_lum_berry", R.drawable.g_lum_berry));
+                    dsHinhitem.add(new ImageItem.item("g_oran_berry", R.drawable.g_oran_berry));
+                    dsHinhitem.add(new ImageItem.item("g_pecha_berry", R.drawable.g_pecha_berry));
+                    dsHinhitem.add(new ImageItem.item("g_persim_berry", R.drawable.g_persim_berry));
+                    dsHinhitem.add(new ImageItem.item("g_petaya_berry", R.drawable.g_petaya_berry));
+                    dsHinhitem.add(new ImageItem.item("g_sitrus_berry", R.drawable.g_sitrus_berry));
 
                 }
 
                 // Xáo trộn danh sách
-                Collections.shuffle(dsHinh);
+                Collections.shuffle(dsHinhitem);
 
 // Lấy 4 phần tử đầu tiên
-                dsHinh = new ArrayList<>(dsHinh.subList(0, 4));
+                final ArrayList<ImageItem.item> displayList = new ArrayList<>(dsHinhitem.subList(0, 4));
 
-                ImageOnlyAdapter adapter = new ImageOnlyAdapter(this, dsHinh);
-//                recyclerView.setAdapter(adapter);
+                ImageItem adapter = new ImageItem(this, displayList);
+
+                recyclerView.setAdapter(adapter);
 
 
                 adapter.setOnItemClickListener(position -> {
-                    ImageOnlyAdapter.HinhAnh hinhAnh = dsHinh.get(position);
+                    ImageItem.item hinhAnh = dsHinhitem.get(position);
 
                     // 1. Xử lý chọn nhân vật trước
-                    selectCharacter(hinhAnh.getTenHinh());
+                    selectCharacter(hinhAnh.gettenitem());
 
                     // 2. Xoá ảnh khỏi danh sách (sau khi xử lý)
-                    dsHinh.remove(position);
-                    adapter.notifyItemRemoved(position);
+
 
                     // 3. Lưu danh sách ảnh còn lại vào SharedPreferences
-                    String newJson = gson.toJson(dsHinh); // dùng lại gson đã khai báo ở trên
-                    pref.edit().putString("dsHinh_data", newJson).apply();
+                    String newJson = gson.toJson(dsHinhitem); // dùng lại gson đã khai báo ở trên
+                    pref.edit().putString("dsitem_data", newJson).apply();
 
                 });
 

@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 public class skill4 extends AppCompatImageView {
     private static final String TAG = "earthquakeSkill";
     private CharacterView characterView;
-    private int dmg = 5;  // Lượng máu hồi phục
+    private int dmg = 500;  // Lượng máu hồi phục
     private int mana = 10;    // Mana tiêu hao
     private BotView botView;
 

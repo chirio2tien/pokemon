@@ -50,7 +50,7 @@ public class CharacterSelectionActivity extends AppCompatActivity {
             dsHinh = gson.fromJson(json, type);
         } else {
             // Nếu chưa có dữ liệu, tạo danh sách mặc định
-            dsHinh = new ArrayList<>(pikachuuuuuuuuuuuuuu);
+            dsHinh = new ArrayList<>();
             dsHinh.add(new ImageOnlyAdapter.HinhAnh("psyduck", R.drawable.psyduck));
             dsHinh.add(new ImageOnlyAdapter.HinhAnh("pikachu", R.drawable.pikachu));
             dsHinh.add(new ImageOnlyAdapter.HinhAnh("incineroar", R.drawable.incineroar));
