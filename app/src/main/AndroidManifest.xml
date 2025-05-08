@@ -11,7 +11,7 @@
         android:roundIcon="@drawable/logo_sau_xanh"
         android:supportsRtl="true"
         android:theme="@style/Theme.PokemomPROJ"
-        tools:targetApi="31" >
+        tools:targetApi="35" >
 
         <activity android:name=".CharacterSelectionActivity"
             android:screenOrientation="landscape">

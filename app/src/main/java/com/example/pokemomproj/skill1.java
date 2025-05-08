@@ -23,6 +23,7 @@ public class skill1 extends View {
     private AnimationDrawable fireballDrawable;
     private AnimatedImageDrawable animatedImageDrawable;
     private BotView botView;
+    private CharacterView characterView;
 
     public skill1(Context context, float startX, float startY, float directionX, float directionY, int width, int height) {
         super(context);
@@ -99,21 +100,29 @@ public class skill1 extends View {
 
     private void checkCollision() {
         if (botView != null) {
-
-            if (botView != null && botView.checkCollision(fireballX, fireballY, fireballWidth, fireballHeight)) {
+            if (botView.checkCollision(fireballX, fireballY, fireballWidth, fireballHeight)) {
                 Log.d("skill1", "Collision detected with bot!");
-                // Handle collision (e.g., reduce bot HP)
+
                 botView.reduceHp(20);
-                // Optionally, remove the skill view after collision
+
                 if (getParent() != null) {
                     ((ViewGroup) getParent()).removeView(this);
                 }
 
             }
 
-
+        }
+        if (characterView != null) {
+            if (characterView.checkCollision(fireballX, fireballY, fireballWidth, fireballHeight)) {
+                Log.d("Skill1", "Collision detected with player!");
+                characterView.reduceHp(20); // Trừ 20 HP của nhân vật khi trúng đạn
+                if (getParent() != null) {
+                    ((ViewGroup) getParent()).removeView(this);
+                }
+            }
         }
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -140,6 +149,9 @@ public class skill1 extends View {
 
     public void setBotView(BotView botView) {
         this.botView = botView;
+    }
+    public void setCharacterView(CharacterView characterView) {
+        this.characterView = characterView;
     }
     public static skill1 createSkill(CharacterView characterView) {
         if (characterView.getCurrentMana() >= characterView.getMaxMana() * 0.2) {
@@ -185,48 +197,48 @@ public class skill1 extends View {
         Log.d("Skill1", "Not enough mana to use Skill 1");
         return null;
     }
-    public static skill1 botUseSkill(BotView botView) {
+    public static skill1 botUseSkill1(BotView botView, CharacterView characterView) {
         if (botView.getCurrentMana() >= botView.getMaxMana() * 0.2) {
-            Log.d("Skill1", "Bot using fireball skill");
-            float directionX = 0;
-            float directionY = 0;
+            Log.d("Skill1", "Bot using fireball skill towards player");
 
-            if (botView.getCurrentDrawable() == botView.animationDrawableUp) {
-                directionY = -1;
-            } else if (botView.getCurrentDrawable() == botView.animationDrawableDown) {
-                directionY = 1;
-            } else if (botView.getCurrentDrawable() == botView.animationDrawableLeft) {
-                directionX = -1;
-            } else if (botView.getCurrentDrawable() == botView.animationDrawableRight) {
-                directionX = 1;
-            } else if (botView.getCurrentDrawable() == botView.animationDrawableUpRight) {
-                directionX = 1;
-                directionY = -1;
-            } else if (botView.getCurrentDrawable() == botView.animationDrawableUpLeft) {
-                directionX = -1;
-                directionY = -1;
-            } else if (botView.getCurrentDrawable() == botView.animationDrawableDownRight) {
-                directionX = 1;
-                directionY = 1;
-            } else if (botView.getCurrentDrawable() == botView.animationDrawableDownLeft) {
-                directionX = -1;
-                directionY = 1;
+            // Lấy vị trí của bot
+            int[] botLocation = new int[2];
+            botView.getLocationOnScreen(botLocation);
+            float botX = botLocation[0] + botView.getCharacterX();
+            float botY = botLocation[1] + botView.getCharacterY();
+
+            // Lấy vị trí của người chơi
+            int[] playerLocation = new int[2];
+            characterView.getLocationOnScreen(playerLocation);
+            float playerX = playerLocation[0] + characterView.getCharacterX();
+            float playerY = playerLocation[1] + characterView.getCharacterY();
+
+            // Tính toán hướng di chuyển
+            float directionX = playerX - botX;
+            float directionY = playerY - botY;
+
+            // Chuẩn hóa vector hướng để skill bay với tốc độ cố định
+            float length = (float) Math.sqrt(directionX * directionX + directionY * directionY);
+            if (length != 0) {
+                directionX /= length;  // Normalize to 1
+                directionY /= length;
             }
 
-            int[] location = new int[2];
-            botView.getLocationOnScreen(location);
-            float startX = location[0] + botView.getCharacterX() - 80;
-            float startY = location[1] + botView.getCharacterY();
-
+            // Kích thước viên đạn
             int fireballWidth = 100;
             int fireballHeight = 100;
-            skill1 fireballSkill = new skill1(botView.getContext(), startX, startY, directionX, directionY, fireballWidth, fireballHeight);
+
+            // Tạo skill
+            skill1 fireballSkill = new skill1(botView.getContext(), botX-80, botY, directionX, directionY, fireballWidth, fireballHeight);
             ((ViewGroup) botView.getParent()).addView(fireballSkill);
 
+            // Giảm mana của bot sau khi sử dụng skill
             botView.reduceMana((int) (botView.getMaxMana() * 0.2));
+
             return fireballSkill;
         }
         Log.d("Skill1", "Not enough mana to use Skill 1");
         return null;
     }
+
 }

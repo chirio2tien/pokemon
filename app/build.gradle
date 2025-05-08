@@ -9,6 +9,7 @@ android {
     defaultConfig {
         applicationId "com.example.pokemomproj"
         minSdk 30
+        //noinspection ExpiredTargetSdkVersion
         targetSdk 30
         versionCode 1
         versionName "1.0"
@@ -33,6 +34,8 @@ dependencies {
     implementation('com.github.bumptech.glide:glide:4.16.0') {
         exclude group: 'androidx.annotation', module: 'annotation'
     }
+    implementation 'com.airbnb.android:lottie:6.0.0'
+    implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.29'
     implementation libs.monitor
     implementation libs.androidx.junit

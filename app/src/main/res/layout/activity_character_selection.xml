@@ -1,49 +1,19 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="24dp"
-        android:paddingBottom="16dp"
-        android:text="Select Your Character"
-        android:textSize="24sp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <ImageView
-        android:id="@+id/character1"
-        android:layout_width="161dp"
-        android:layout_height="162dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="104dp"
-        android:contentDescription="Character 1"
-        android:padding="8dp"
-        android:src="@drawable/giratina"
-        app:layout_constraintEnd_toStartOf="@+id/character2"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/character2"
-        android:layout_width="145dp"
-        android:layout_height="169dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="248dp"
-        android:layout_marginTop="104dp"
-        android:contentDescription="Character 2"
-        android:padding="8dp"
-        android:src="@drawable/gardervoid"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

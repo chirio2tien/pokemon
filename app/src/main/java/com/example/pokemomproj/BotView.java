@@ -38,6 +38,14 @@ public class BotView extends View {
     private hp_bar hpBar;
     private float botX;
     private float botY;
+    private String characterName;
+    private final String[] characterNames = {
+            "giratina", "gardervoid", "incineroar",
+            "urshifu", "pikachu", "psyduck"
+    };
+
+    private CharacterView characterView;
+    private Context context;
 
 
     public BotView(Context context, AttributeSet attrs) {
@@ -61,22 +69,53 @@ public class BotView extends View {
             }
         };
         handler.post(invalidateRunnable);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Placeholder for delayed logic if needed
+            }
+        }, 5000);
+
         invalidateRunnable = new Runnable() {
             @Override
             public void run() {
-
-                if (random.nextFloat() < 0.50) { // 25% chance
-                    skill1 fireballSkill = skill1.botUseSkill(BotView.this);
+                // 50% chance to use fireball skill
+                if (random.nextFloat() < 0.25) {
+                    skill1 fireballSkill = skill1.botUseSkill1(BotView.this, characterView);
+                    if (fireballSkill != null) {
+                        fireballSkill.setCharacterView(characterView);
+                        Log.d(TAG, "Bot used fireball skill.");
+                    } else {
+                        Log.d(TAG, "Bot failed to use fireball skill (not enough mana).");
+                    }
                 }
 
-                handler.postDelayed(this, random.nextInt(500) + 500); // Random delay between 0.5 to 3 seconds
+
+                // Check if bot needs healing
+                if (random.nextFloat()<0.25&&getCurrentMana() >= 65) {
+                    // Ensure enough mana for healing
+                        skill2 healingSkill = new skill2(getContext(),BotView.this,null);
+                        healingSkill.BotstartHealing(BotView.this);
+
+                }
+
+                // Schedule the next execution with a random delay
+                handler.postDelayed(this, random.nextInt(500) + 1500); // Random delay between 0.5 to 1 second
             }
         };
         handler.post(invalidateRunnable);
     }
 
     private void initAnimations(Context context) {
-        String characterName = "giratina"; // Ensure this matches your drawable names
+        if (context == null) {
+            Log.e(TAG, "initAnimations: Context is null!");
+            return;
+        }
+
+        Random random = new Random();
+        int index = random.nextInt(characterNames.length);
+        characterName = characterNames[index];
 
         animationDrawableUp = createAnimationDrawable(context, characterName, "u");
         animationDrawableDown = createAnimationDrawable(context, characterName, "d");
@@ -90,6 +129,7 @@ public class BotView extends View {
         animationDrawable = animationDrawableDown;
         animationDrawable.setOneShot(false);
         animationDrawable.start();
+        setTranslationZ(1);
     }
 
     private AnimationDrawable createAnimationDrawable(Context context, String characterName, String direction) {
@@ -191,13 +231,7 @@ public class BotView extends View {
         invalidate();
     }
 
-    public float getBotX() {
-        return botX;
-    }
 
-    public float getBotY() {
-        return botY;
-    }
 
     public void setHpBar(hp_bar hpBar) {
         this.hpBar = hpBar;
@@ -209,8 +243,25 @@ public class BotView extends View {
             hpBar.setHp(currentHp);
         }
         if (currentHp == 0) {
+            hpBar.setHp(100);
+            currentHp = 100;
+
+            post(new Runnable() {
+                @Override
+                public void run() {
+
+
+                    if (getContext() != null) {
+                        initAnimations(getContext());
+                        invalidate();
+                    } else {
+                        Log.e(TAG, "Context is null! Cannot reinitialize animations.");
+                    }
+                }
+            });
+            imageX = 1200;
+            imageY = 600;
             Log.d(TAG, "Bot HP is zero. Handling bot defeat.");
-            // Handle bot defeat logic here
         }
 
     }
@@ -275,6 +326,15 @@ public class BotView extends View {
     public int getMaxMana() {
         return maxMana;
     }
+    public void healHp(int amount) {
+        int maxHp = 100; // Lấy HP tối đa của nhân vật
+        currentHp += amount; // Hồi máu
+        if (currentHp > maxHp) {
+            currentHp = maxHp; // Giới hạn HP không vượt quá tối đav
+        }
+        hpBar.setHp(currentHp);
+        Log.d("CharacterView", "Healed " + amount + " HP. Current HP: " + currentHp);
+    }
 
     public AnimationDrawable getCurrentDrawable() {
         return animationDrawable;
@@ -287,5 +347,15 @@ public class BotView extends View {
 
     public float getCharacterY() {
         return  imageY;
+    }
+    public void setCharacterView(CharacterView characterView) {
+        this.characterView = characterView;
+    }
+
+    public void setCharacterX(float imageX) {
+        this.imageX = imageX;
+    }
+    public void setCharacterY(float imageY) {
+        this.imageY = imageY;
     }
 }

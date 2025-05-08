@@ -2,6 +2,8 @@ package com.example.pokemomproj;
 
     import android.annotation.SuppressLint;
     import android.content.Context;
+    import android.content.Intent;
+    import android.content.SharedPreferences;
     import android.graphics.Canvas;
     import android.graphics.drawable.AnimationDrawable;
     import android.util.AttributeSet;
@@ -12,7 +14,6 @@ package com.example.pokemomproj;
     import androidx.core.content.ContextCompat;
 
     import java.util.Objects;
-
     public class CharacterView extends View {
 
         private static final String TAG = "CharacterView";
@@ -33,6 +34,10 @@ package com.example.pokemomproj;
         private int maxMana = 100;
         private int currentMana = 100;
         private mana_bar manaBar;
+        private hp_bar hpBar;
+
+        private int maxHp = 100;
+        private int currentHp = 100;
 
         public CharacterView(Context context, AttributeSet attrs) {
             super(context, attrs);
@@ -41,6 +46,7 @@ package com.example.pokemomproj;
 
             initAnimations(context, "gardervoid");
             startAnimation();
+
         }
 
         private void initAnimations(Context context, String characterName) {
@@ -57,6 +63,7 @@ package com.example.pokemomproj;
             previousDrawable = currentDrawable;
             currentDrawable.setOneShot(false);
             currentDrawable.start();
+            setTranslationZ(1);
         }
 
         private AnimationDrawable createAnimationDrawable(Context context, String characterName, String direction) {
@@ -220,4 +227,60 @@ package com.example.pokemomproj;
             initAnimations(getContext(), characterName);
             startAnimation();
         }
+    
+
+   
+    public void setHpBar(hp_bar hpBar) {
+        this.hpBar = hpBar;
     }
+    private boolean isDead = false;
+    public void reduceHp(int percentage) {
+        if (isDead) return;
+        currentHp = Math.max(currentHp - (maxHp * percentage / 100), 0);
+        if (hpBar != null) {
+            hpBar.setHp(currentHp);
+        }
+        if (currentHp == 0 && !isDead) {
+            isDead = true;
+            SharedPreferences prefs = getContext().getSharedPreferences("GameData", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("currentHp", 0);  // Lưu trạng thái chết
+
+            editor.apply();
+            Intent intent = new Intent(getContext(), CharacterSelectionActivity.class);
+            getContext().startActivity(intent);
+
+            ((MainActivity) getContext()).finish();
+        }
+
+    }
+    public boolean checkCollision(float x, float y, float width, float height) {
+        float Left = characterX - currentDrawable.getIntrinsicWidth() / 2;
+        float Right = characterX + currentDrawable.getIntrinsicWidth() / 2;
+        float Top = characterY - currentDrawable.getIntrinsicHeight() / 2;
+        float Bottom = characterY + currentDrawable.getIntrinsicHeight() / 2;
+
+        float skillLeft = x-460;
+        float skillRight = x-460 + width;
+        float skillTop = y-130;
+        float skillBottom = y-130 + height;
+        Log.e("skillbot", "x: " + x + " y: " + y + "characterX: " + characterX + " characterY: " + characterY);
+        return !(skillLeft > Right || skillRight < Left || skillTop > Bottom || skillBottom < Top);
+    }
+    public void healHp(int amount) {
+        int maxHp = 100; // Lấy HP tối đa của nhân vật
+        currentHp += amount; // Hồi máu
+        if (currentHp > maxHp) {
+            currentHp = maxHp; // Giới hạn HP không vượt quá tối đav
+        }
+        hpBar.setHp(currentHp);
+        Log.d("CharacterView", "Healed " + amount + " HP. Current HP: " + currentHp);
+    }
+    public void useHealSkill() {
+        skill2 healSkill = new skill2(getContext(),null,CharacterView.this);
+        healSkill.startHealing();
+    }
+
+
+}
+
