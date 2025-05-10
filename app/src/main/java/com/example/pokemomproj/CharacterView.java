@@ -84,8 +84,12 @@ package com.example.pokemomproj;
             post(new Runnable() {
                 @Override
                 public void run() {
+
                     if (currentDrawable != null) {
-                        currentDrawable.start();
+                        if (!currentDrawable.isRunning()) {
+                            currentDrawable.start();
+                        }
+
                         invalidate();
                         postDelayed(this, 1000 / 60); // 60 FPS
                     }
@@ -98,6 +102,7 @@ package com.example.pokemomproj;
             super.onDraw(canvas);
             if (currentDrawable != null) {
                 canvas.save();
+
                 // Center the drawable based on characterX and characterY
                 float drawX = characterX - (float) currentDrawable.getIntrinsicWidth() / 2;
                 float drawY = characterY - (float) currentDrawable.getIntrinsicHeight() / 2;

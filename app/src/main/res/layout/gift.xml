@@ -31,7 +31,7 @@
         android:layout_marginTop="148dp"
         android:contentDescription="Character 1"
         android:padding="8dp"
-        android:src="@drawable/g_Lum_Berry"
+        android:src="@drawable/g_lum_berry"
         app:layout_constraintEnd_toStartOf="@+id/character2"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +46,7 @@
         android:layout_marginTop="148dp"
         android:contentDescription="Character 2"
         android:padding="8dp"
-        android:src="@drawable/g_Oran_Berry"
+        android:src="@drawable/g_oran_berry"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,7 +59,7 @@
         android:layout_marginTop="148dp"
         android:contentDescription="Character 3"
         android:padding="8dp"
-        android:src="@drawable/g_Persim_Berry"
+        android:src="@drawable/g_persim_berry"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -72,7 +72,7 @@
         android:layout_marginTop="148dp"
         android:contentDescription="Character 4"
         android:padding="8dp"
-        android:src="@drawable/g_Sitrus_Berry"
+        android:src="@drawable/g_sitrus_berry"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

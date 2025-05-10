@@ -8,10 +8,10 @@ package com.example.pokemomproj;
 
         public class gift {
             private final int[] images = {
-                R.drawable.g_Lum_Berry,
-                R.drawable.g_Oran_Berry,
-                R.drawable.g_Persim_Berry,
-                R.drawable.g_Sitrus_Berry
+                R.drawable.g_lum_berry,
+                R.drawable.g_oran_berry,
+                R.drawable.g_persim_berry,
+                R.drawable.g_sitrus_berry
             };
 
             private final Context context;
