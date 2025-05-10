@@ -39,5 +39,6 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.29'
     implementation libs.monitor
     implementation libs.androidx.junit
+    implementation libs.firebase.crashlytics.buildtools
     testImplementation libs.junit.junit
 }

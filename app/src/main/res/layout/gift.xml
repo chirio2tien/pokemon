@@ -22,57 +22,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <ImageView
-        android:id="@+id/character1"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="148dp"
-        android:contentDescription="Character 1"
-        android:padding="8dp"
-        android:src="@drawable/g_lum_berry"
-        app:layout_constraintEnd_toStartOf="@+id/character2"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/character2"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="240dp"
-        android:layout_marginTop="148dp"
-        android:contentDescription="Character 2"
-        android:padding="8dp"
-        android:src="@drawable/g_oran_berry"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/character3"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="408dp"
-        android:layout_marginTop="148dp"
-        android:contentDescription="Character 3"
-        android:padding="8dp"
-        android:src="@drawable/g_persim_berry"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/character4"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="552dp"
-        android:layout_marginTop="148dp"
-        android:contentDescription="Character 4"
-        android:padding="8dp"
-        android:src="@drawable/g_sitrus_berry"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewImageItem"
+        android:layout_width="525dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

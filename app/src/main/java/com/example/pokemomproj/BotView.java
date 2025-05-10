@@ -2,6 +2,7 @@ package com.example.pokemomproj;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
@@ -243,24 +244,10 @@ public class BotView extends View {
             hpBar.setHp(currentHp);
         }
         if (currentHp == 0) {
-            hpBar.setHp(100);
-            currentHp = 100;
-
-            post(new Runnable() {
-                @Override
-                public void run() {
+            Intent intent = new Intent(getContext(), gift.class);
+            getContext().startActivity(intent);
 
 
-                    if (getContext() != null) {
-                        initAnimations(getContext());
-                        invalidate();
-                    } else {
-                        Log.e(TAG, "Context is null! Cannot reinitialize animations.");
-                    }
-                }
-            });
-            imageX = 1200;
-            imageY = 600;
             Log.d(TAG, "Bot HP is zero. Handling bot defeat.");
         }
 
