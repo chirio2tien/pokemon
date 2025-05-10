@@ -73,7 +73,7 @@ public class gift extends AppCompatActivity {
                     ImageItem.item hinhAnh = dsHinhitem.get(position);
 
                     // 1. Xử lý chọn nhân vật trước
-                    selectCharacter(hinhAnh.gettenitem());
+                    selectItem(hinhAnh.gettenitem());
 
                     // 2. Xoá ảnh khỏi danh sách (sau khi xử lý)
 
@@ -91,7 +91,7 @@ public class gift extends AppCompatActivity {
 
 
 
-            private void selectCharacter(String characterName) {
+            private void selectItem(String characterName) {
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("characterName", characterName);
                 startActivity(intent);
