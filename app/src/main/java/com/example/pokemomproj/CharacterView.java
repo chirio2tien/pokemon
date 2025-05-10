@@ -38,13 +38,14 @@ package com.example.pokemomproj;
 
         private int maxHp = 100;
         private int currentHp = 100;
+        private String characterName = "gardervoid";
 
         public CharacterView(Context context, AttributeSet attrs) {
             super(context, attrs);
             characterX = 200;
             characterY = 200;
 
-            initAnimations(context, "gardervoid");
+            initAnimations(context, characterName);
             startAnimation();
 
         }
@@ -118,11 +119,6 @@ package com.example.pokemomproj;
             }
         }
 
-        public void setPlayerPosition(float x, float y) {
-            this.characterX = x;
-            this.characterY = y;
-            postInvalidate();
-        }
 
         public void move(float xPercent, float yPercent) {
             float newX = characterX + xPercent * 10;
@@ -229,6 +225,7 @@ package com.example.pokemomproj;
         }
 
         public void setCharacterName(String characterName) {
+            this.characterName= characterName;
             initAnimations(getContext(), characterName);
             startAnimation();
         }
@@ -287,5 +284,8 @@ package com.example.pokemomproj;
     }
 
 
-}
+        public String getCharacterName() {
+        return characterName;
+        }
+    }
 

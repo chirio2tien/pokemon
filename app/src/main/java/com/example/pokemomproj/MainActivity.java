@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private float imageX = 1200;
     private float imageY= 600;
     private hp_bar hpBar;
+     private String characterName = getIntent().getStringExtra("characterName");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +47,10 @@ public class MainActivity extends AppCompatActivity {
         }, 3000); // Delay 3 giây
 
         characterView = findViewById(R.id.characterView);
-        String characterName = getIntent().getStringExtra("characterName");
+
         if (characterName != null) {
             characterView.setCharacterName(characterName);
+
         }
 
         botView = findViewById(R.id.botView);
@@ -119,6 +121,11 @@ public class MainActivity extends AppCompatActivity {
         currentHp = prefs.getInt("currentHp", 100);
         imageX = prefs.getFloat("imageX", 1200);
         imageY = prefs.getFloat("imageY", 600);
+        characterName = prefs.getString("characterName", null);
+        if (characterName != null) {
+            characterView.setCharacterName(characterName);
+
+        }
         botView.setCharacterX(imageX);
         botView.setCharacterY(imageY);
 
@@ -132,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt("currentHp", currentHp);
         editor.putFloat("imageX", botView.getCharacterX());
         editor.putFloat("imageY", botView.getCharacterY());
+        editor.putString("characterName", characterName);
         editor.apply();
     }
 
