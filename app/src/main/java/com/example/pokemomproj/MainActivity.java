@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private float imageX = 1200;
     private float imageY= 600;
     private hp_bar hpBar;
-     private String characterName = getIntent().getStringExtra("characterName");
+     private String Name;
+    private String characterName = null; // Biến để lưu tên nhân vật
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
         }, 3000); // Delay 3 giây
 
         characterView = findViewById(R.id.characterView);
+        characterName = getIntent().getStringExtra("characterName");
+
+        if (characterName == null) {
+            // Nếu không có dữ liệu mới, lấy từ SharedPreferences
+            SharedPreferences prefs = getSharedPreferences("GameData", MODE_PRIVATE);
+            characterName = prefs.getString("characterName", null);
+        }
 
         if (characterName != null) {
             characterView.setCharacterName(characterName);
@@ -117,19 +125,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         SharedPreferences prefs = getSharedPreferences("GameData", MODE_PRIVATE);
         currentHp = prefs.getInt("currentHp", 100);
         imageX = prefs.getFloat("imageX", 1200);
         imageY = prefs.getFloat("imageY", 600);
-        characterName = prefs.getString("characterName", null);
-        if (characterName != null) {
-            characterView.setCharacterName(characterName);
 
+        if (characterName == null) {
+            characterName = prefs.getString("characterName", null);
         }
-        botView.setCharacterX(imageX);
-        botView.setCharacterY(imageY);
 
+        // Trì hoãn việc set nhân vật để đảm bảo View đã vẽ xong
+        new Handler().postDelayed(() -> {
+            if (characterName != null && characterView != null) {
+                Log.d("DEBUG", "Resume: Set character name = " + characterName);
+                characterView.setCharacterName(characterName);
+            }
+            botView.setCharacterX(imageX);
+            botView.setCharacterY(imageY);
+        }, 200); // trì hoãn 200ms là đủ an toàn trong hầu hết các trường hợp
     }
+
 
     @Override
     protected void onPause() {

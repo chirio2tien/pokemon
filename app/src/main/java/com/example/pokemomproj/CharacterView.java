@@ -113,7 +113,7 @@ package com.example.pokemomproj;
                 canvas.restore();
 
                 // Log the character's position for debugging
-                Log.d(TAG, "Character position: (" + characterX + ", " + characterY + ")");
+
             } else {
                 Log.e(TAG, "currentDrawable is null in onDraw");
             }
@@ -225,14 +225,26 @@ package com.example.pokemomproj;
         }
 
         public void setCharacterName(String characterName) {
-            this.characterName= characterName;
-            initAnimations(getContext(), characterName);
-            startAnimation();
-        }
-    
+            this.characterName = characterName;
 
-   
-    public void setHpBar(hp_bar hpBar) {
+            // Khởi tạo lại các animation mới cho nhân vật này
+            initAnimations(getContext(), characterName);
+
+            // Cập nhật drawable mặc định để hiển thị lại (ví dụ animation hướng xuống)
+            currentDrawable = animationDrawableDown;
+            previousDrawable = currentDrawable;
+
+            // Khởi động lại animation
+            currentDrawable.start();
+            invalidate(); // ép vẽ lại view
+            Log.d("CharacterView", "setCharacterName: " + characterName);
+
+        }
+
+
+
+
+        public void setHpBar(hp_bar hpBar) {
         this.hpBar = hpBar;
     }
     private boolean isDead = false;

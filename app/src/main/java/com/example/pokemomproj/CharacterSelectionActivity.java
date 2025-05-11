@@ -44,7 +44,7 @@ public class CharacterSelectionActivity extends AppCompatActivity {
         ArrayList<ImageOnlyAdapter.HinhAnh> dsHinh;
         Gson gson = new Gson();
 
-        if (json != null) {
+        if (json != null ) {
             // Tạo lại danh sách từ chuỗi JSON
             Type type = new TypeToken<ArrayList<ImageOnlyAdapter.HinhAnh>>() {}.getType();
             dsHinh = gson.fromJson(json, type);
