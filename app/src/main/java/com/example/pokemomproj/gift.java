@@ -3,6 +3,8 @@ package com.example.pokemomproj;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -81,4 +83,14 @@ public class gift extends AppCompatActivity {
         intent.putExtra("characterName", characterName);
         startActivity(intent);
     }
+
+    // Đang xem sex phương thức để clear toàn bộ SharedPreferences
+//    public void clearData(View view) {
+//        SharedPreferences pref = getSharedPreferences("dsitem_pref", MODE_PRIVATE);
+//        SharedPreferences.Editor editor = pref.edit();
+//        editor.clear(); // Xóa toàn bộ SharedPreferences
+//        editor.apply();
+//        Toast.makeText(this, "Data cleared!", Toast.LENGTH_SHORT).show();
+//
+//      }
 }
