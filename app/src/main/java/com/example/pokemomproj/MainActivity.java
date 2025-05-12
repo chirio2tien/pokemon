@@ -1,11 +1,13 @@
 package com.example.pokemomproj;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,7 +23,9 @@ public class MainActivity extends AppCompatActivity {
     private float imageY= 600;
     private hp_bar hpBar;
      private String Name;
-    private String characterName = null; // Biến để lưu tên nhân vật
+    private String characterName = null;
+    private boolean isPaused = false;
+
 
 
     @Override
@@ -61,6 +65,23 @@ public class MainActivity extends AppCompatActivity {
         hp_bar characterHpBar = findViewById(R.id.characterHpBar);
         characterView.setHpBar(characterHpBar);
 
+
+        ImageButton btnPause = findViewById(R.id.btnPause);
+
+
+
+
+// Khi nhấn Pause
+        btnPause.setOnClickListener(v -> {
+            characterView.pause();
+            botView.pause();
+
+            Intent intent = new Intent(MainActivity.this, pause.class);
+            startActivity(intent);
+        });
+
+
+
         Button skillButton1 = findViewById(R.id.skillButton1);
         skillButton1.setOnClickListener(v -> {
             skill1 fireballSkill = skill1.createSkill(characterView);
@@ -75,46 +96,39 @@ public class MainActivity extends AppCompatActivity {
             characterView.useHealSkill();
         });
 
-        Button btnEarthQuakeSkill2 = findViewById(R.id.btnEarthQuakeSkill2);
-        btnEarthQuakeSkill2.setOnClickListener(v -> {
+        Button btnEarthQuakeSkill = findViewById(R.id.btnEarthQuakeSkill);
+        btnEarthQuakeSkill.setOnClickListener(v -> {
             skill4 earthquakeSkill = new skill4(MainActivity.this, characterView);
             ((ViewGroup) characterView.getParent()).addView(earthquakeSkill);
             earthquakeSkill.setBotView(botView);
             earthquakeSkill.startDamage();
         });
 
-        JoystickView joystickView = findViewById(R.id.joystickView);
-        joystickView.setJoystickListener((xPercent, yPercent) -> {
-            if (!isPaused) {
-                characterView.move(xPercent, yPercent);
+        Button skillButton3 = findViewById(R.id.btnBeam);
+        skillButton3.setOnClickListener(v -> {
+            skill3 fireballSkill = skill3.createSkill(characterView);
+            if (fireballSkill != null) {
+                fireballSkill.setBotView(botView);
             }
         });
 
-        // Pause & Resume
+        Button skillButton5 = findViewById(R.id.btnSolarBeam);
+        skillButton5.setOnClickListener(v -> {
+            skill5 fireballSkill = skill5.createSkill(characterView);
+            if (fireballSkill != null) {
+                fireballSkill.setBotView(botView);
+            }
+        });
 
-
-//        btnPause.setOnClickListener(v -> {
-//            isPaused = true;
-//            characterView.setMovementEnabled(false);
-//            botView.setMovementEnabled(false);
-//            characterView.stopManaRegeneration();
-//            botView.stopManaRegeneration();
-//
-//            btnPause.setVisibility(View.GONE);
-//            btnResume.setVisibility(View.VISIBLE);
-//        });
-//
-//        btnResume.setOnClickListener(v -> {
-//            isPaused = false;
-//            characterView.setMovementEnabled(true);
-//            botView.setMovementEnabled(true);
-//            characterView.startManaRegeneration();
-//            botView.startManaRegeneration();
-//
-//            btnPause.setVisibility(View.VISIBLE);
-//            btnResume.setVisibility(View.GONE);
-//        });
+        JoystickView joystickView = findViewById(R.id.joystickView);
+        joystickView.setJoystickListener(new JoystickView.JoystickListener() {
+            @Override
+            public void onJoystickMoved(float xPercent, float yPercent) {
+                characterView.move(xPercent, yPercent);
+            }
+        });
     }
+
 
     @Override
     protected void onResume() {
@@ -124,22 +138,24 @@ public class MainActivity extends AppCompatActivity {
         currentHp = prefs.getInt("currentHp", 100);
         imageX = prefs.getFloat("imageX", 1200);
         imageY = prefs.getFloat("imageY", 600);
+        int hpbot = prefs.getInt("hpbot", 100);
 
 
         if (characterName == null) {
             characterName = prefs.getString("characterName", null);
         }
 
-        // Trì hoãn việc set nhân vật để đảm bảo View đã vẽ xong
-        new Handler().postDelayed(() -> {
-            if (characterName != null && characterView != null) {
+
+            if (characterName != null ) {
                 Log.d("DEBUG", "Resume: Set character name = " + characterName);
                 characterView.setCharacterName(characterName);
             }
+            botView.setCurrentHp(hpbot);
             botView.setCharacterX(imageX);
             botView.setCharacterY(imageY);
-        }, 200); // trì hoãn 200ms là đủ an toàn trong hầu hết các trường hợp
-
+        // Resume logic nếu đang quay lại từ Pause
+        characterView.resume();
+        botView.resume();
     }
 
 
@@ -149,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("GameData", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("currentHp", currentHp);
+        editor.putInt("hpbot", botView.getCurrentHp());
         editor.putFloat("imageX", botView.getCharacterX());
         editor.putFloat("imageY", botView.getCharacterY());
         editor.putString("characterName", characterName);

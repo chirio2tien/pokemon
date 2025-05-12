@@ -26,6 +26,9 @@
         <activity
             android:name=".gift"
             android:screenOrientation="landscape"/>
+        <activity android:name=".pause"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="landscape"/>
 
 
     </application>

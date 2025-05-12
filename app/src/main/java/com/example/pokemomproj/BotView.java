@@ -16,6 +16,8 @@ import androidx.core.content.ContextCompat;
 import java.util.Objects;
 import java.util.Random;
 
+// phần đầu giữ nguyên...
+
 public class BotView extends View {
     private static final String TAG = "BotView";
 
@@ -40,6 +42,7 @@ public class BotView extends View {
     private int maxMana = 100;
     private int currentMana = 100;
     private boolean hasGivenGift = false;
+    private boolean isPaused = false;
 
     private hp_bar hpBar;
     private mana_bar manaBar;
@@ -90,8 +93,10 @@ public class BotView extends View {
     private final Runnable frameUpdateRunnable = new Runnable() {
         @Override
         public void run() {
-            move(xDirection, yDirection);
-            invalidate();
+            if (!isPaused ) {
+                move(xDirection, yDirection);
+                invalidate();
+            }
             handler.postDelayed(this, 1000 / 60); // 60 FPS
         }
     };
@@ -99,19 +104,38 @@ public class BotView extends View {
     private final Runnable logicRunnable = new Runnable() {
         @Override
         public void run() {
-            if (random.nextFloat() < 0.25) {
-                skill1 fireball = skill1.botUseSkill1(BotView.this, characterView);
-                if (fireball != null) {
-                    fireball.setCharacterView(characterView);
-                    Log.d(TAG, "Bot used fireball skill.");
+            if (!isPaused) {
+                if (random.nextFloat() < 0.25) {
+                    skill1 fireball = skill1.botUseSkill1(BotView.this, characterView);
+                    if (fireball != null) {
+                        fireball.setCharacterView(characterView);
+                        Log.d(TAG, "Bot used fireball skill.");
+                    }
+                }
+
+                if (random.nextFloat() < 0.25) {
+                    skill3 beam = skill3.botUseSkill3(BotView.this, characterView);
+                    if (beam != null) {
+                        beam.setCharacterView(characterView);
+                        Log.d(TAG, "Bot used beam skill.");
+                    }
+                }
+
+                if (random.nextFloat() < 0.25 && getCurrentMana() >= 65) {
+                    skill2 healing = new skill2(getContext(), BotView.this, null);
+                    healing.BotstartHealing(BotView.this);
+                }
+
+                // NEW: skill5 usage — bot đứng yên khi dùng
+                if (random.nextFloat() < 0.25 && getCurrentMana() >= 80) {
+                    skill5 s5 = skill5.botUseSkill5(BotView.this, characterView);
+                    if (s5 != null) {
+                        s5.setCharacterView(characterView);
+                        Log.d(TAG, "Bot used skill5.");
+                    }
+
                 }
             }
-
-            if (random.nextFloat() < 0.25 && getCurrentMana() >= 65) {
-                skill2 healing = new skill2(getContext(), BotView.this, null);
-                healing.BotstartHealing(BotView.this);
-            }
-
             handler.postDelayed(this, random.nextInt(500) + 1500);
         }
     };
@@ -128,11 +152,11 @@ public class BotView extends View {
         post(new Runnable() {
             @Override
             public void run() {
-                if (animationDrawable != null) {
+                if (!isPaused && animationDrawable != null) {
                     animationDrawable.start();
                     invalidate();
-                    postDelayed(this, 1000 / 60);
                 }
+                postDelayed(this, 1000 / 60);
             }
         });
     }
@@ -186,6 +210,20 @@ public class BotView extends View {
         }
     }
 
+    public void pause() {
+        isPaused = true;
+        if (animationDrawable != null && animationDrawable.isRunning()) {
+            animationDrawable.stop();
+        }
+    }
+
+    public void resume() {
+        isPaused = false;
+        if (animationDrawable != null && !animationDrawable.isRunning()) {
+            animationDrawable.start();
+        }
+    }
+
     private void giveGift() {
         hasGivenGift = true;
         SharedPreferences prefs = getContext().getSharedPreferences("gifts", Context.MODE_PRIVATE);
@@ -194,6 +232,9 @@ public class BotView extends View {
 
         Intent intent = new Intent(getContext(), gift.class);
         getContext().startActivity(intent);
+        if (getContext() instanceof MainActivity) {
+            ((MainActivity) getContext()).finish();
+        }
         Log.d(TAG, "Bot defeated, gift given.");
     }
 
@@ -225,8 +266,10 @@ public class BotView extends View {
         post(new Runnable() {
             @Override
             public void run() {
-                currentMana = Math.min(currentMana + 20, maxMana);
-                if (manaBar != null) manaBar.setMana(currentMana);
+                if (!isPaused) {
+                    currentMana = Math.min(currentMana + 20, maxMana);
+                    if (manaBar != null) manaBar.setMana(currentMana);
+                }
                 postDelayed(this, 1000);
             }
         });
@@ -235,7 +278,8 @@ public class BotView extends View {
     // Getters/Setters
     public int getCurrentMana() { return currentMana; }
     public int getMaxMana() { return maxMana; }
-    public float getCurrentHp() { return currentHp; }
+    public int getCurrentHp() { return currentHp; }
+    public void setCurrentHp(int currentHp) { this.currentHp = currentHp; }
     public void setHpBar(hp_bar hpBar) { this.hpBar = hpBar; }
     public void setManaBar(mana_bar manaBar) { this.manaBar = manaBar; }
     public void setCharacterView(CharacterView characterView) { this.characterView = characterView; }
@@ -243,5 +287,6 @@ public class BotView extends View {
     public float getCharacterY() { return imageY; }
     public void setCharacterX(float x) { this.imageX = x; }
     public void setCharacterY(float y) { this.imageY = y; }
-    public AnimationDrawable getCurrentDrawable() { return animationDrawable; }
+    public String getCharacterName() { return characterName; }
+
 }
