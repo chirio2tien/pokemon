@@ -15,5 +15,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- nút reset lại dữ liệu
+     <Button
+          android:id="@+id/btnClear"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Clear Data"
+          android:layout_margin="16dp"
+          android:layout_centerHorizontal="true"
+          android:onClick="clearData" />
+-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>

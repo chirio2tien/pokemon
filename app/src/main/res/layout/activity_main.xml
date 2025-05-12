@@ -29,6 +29,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.439" />
 
+
+
+
     <com.example.pokemomproj.BotView
         android:id="@+id/botView"
         android:layout_width="550dp"
