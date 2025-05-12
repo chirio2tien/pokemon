@@ -1,6 +1,5 @@
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="8dp">
 
@@ -8,7 +7,21 @@
         android:id="@+id/imgOnly"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        />
+        android:contentDescription="@string/app_name" />
+
+    <TextView
+        android:id="@+id/txtSoLuong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="4dp"
+        android:background="#AA000000"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:padding="2dp"
+        android:text="x0"
+        android:visibility="gone" />
 </FrameLayout>

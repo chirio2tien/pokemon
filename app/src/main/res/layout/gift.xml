@@ -13,66 +13,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="280dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="256dp"
+        android:layout_marginTop="132dp"
         android:paddingBottom="16dp"
         android:text="Select Your Gift"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <ImageView
-        android:id="@+id/character1"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="148dp"
-        android:contentDescription="Character 1"
-        android:padding="8dp"
-        android:src="@drawable/g_Lum_Berry"
-        app:layout_constraintEnd_toStartOf="@+id/character2"
-        app:layout_constraintHorizontal_bias="0.0"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="*Số lượng hiển thị bên dưới là số lượng đang có trong balo của bạn"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.456"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.627" />
 
-    <ImageView
-        android:id="@+id/character2"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="240dp"
-        android:layout_marginTop="148dp"
-        android:contentDescription="Character 2"
-        android:padding="8dp"
-        android:src="@drawable/g_Oran_Berry"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/character3"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="408dp"
-        android:layout_marginTop="148dp"
-        android:contentDescription="Character 3"
-        android:padding="8dp"
-        android:src="@drawable/g_Persim_Berry"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/character4"
-        android:layout_width="96dp"
-        android:layout_height="98dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="552dp"
-        android:layout_marginTop="148dp"
-        android:contentDescription="Character 4"
-        android:padding="8dp"
-        android:src="@drawable/g_Sitrus_Berry"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewImageItem"
+        android:layout_width="525dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

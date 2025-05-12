@@ -38,13 +38,14 @@ package com.example.pokemomproj;
 
         private int maxHp = 100;
         private int currentHp = 100;
+        private String characterName = "gardervoid";
 
         public CharacterView(Context context, AttributeSet attrs) {
             super(context, attrs);
             characterX = 200;
             characterY = 200;
 
-            initAnimations(context, "gardervoid");
+            initAnimations(context, characterName);
             startAnimation();
 
         }
@@ -84,8 +85,12 @@ package com.example.pokemomproj;
             post(new Runnable() {
                 @Override
                 public void run() {
+
                     if (currentDrawable != null) {
-                        currentDrawable.start();
+                        if (!currentDrawable.isRunning()) {
+                            currentDrawable.start();
+                        }
+
                         invalidate();
                         postDelayed(this, 1000 / 60); // 60 FPS
                     }
@@ -98,6 +103,7 @@ package com.example.pokemomproj;
             super.onDraw(canvas);
             if (currentDrawable != null) {
                 canvas.save();
+
                 // Center the drawable based on characterX and characterY
                 float drawX = characterX - (float) currentDrawable.getIntrinsicWidth() / 2;
                 float drawY = characterY - (float) currentDrawable.getIntrinsicHeight() / 2;
@@ -107,19 +113,21 @@ package com.example.pokemomproj;
                 canvas.restore();
 
                 // Log the character's position for debugging
-                Log.d(TAG, "Character position: (" + characterX + ", " + characterY + ")");
+
             } else {
                 Log.e(TAG, "currentDrawable is null in onDraw");
             }
         }
 
-        public void setPlayerPosition(float x, float y) {
-            this.characterX = x;
-            this.characterY = y;
-            postInvalidate();
+        private boolean isMovementEnabled = true;
+
+        public void setMovementEnabled(boolean enabled) {
+            this.isMovementEnabled = enabled;
         }
 
+
         public void move(float xPercent, float yPercent) {
+            if (!isMovementEnabled) return;
             float newX = characterX + xPercent * 10;
             float newY = characterY + yPercent * 10;
 
@@ -171,9 +179,7 @@ package com.example.pokemomproj;
             }
         }
 
-        public Node getPlayerPosition() {
-            return new Node((int) (characterX / 50), (int) (characterY / 50));
-        }
+
 
         public void setManaBar(mana_bar manaBar) {
             this.manaBar = manaBar;
@@ -224,13 +230,26 @@ package com.example.pokemomproj;
         }
 
         public void setCharacterName(String characterName) {
-            initAnimations(getContext(), characterName);
-            startAnimation();
-        }
-    
+            this.characterName = characterName;
 
-   
-    public void setHpBar(hp_bar hpBar) {
+            // Khởi tạo lại các animation mới cho nhân vật này
+            initAnimations(getContext(), characterName);
+
+            // Cập nhật drawable mặc định để hiển thị lại (ví dụ animation hướng xuống)
+            currentDrawable = animationDrawableDown;
+            previousDrawable = currentDrawable;
+
+            // Khởi động lại animation
+            currentDrawable.start();
+            invalidate(); // ép vẽ lại view
+            Log.d("CharacterView", "setCharacterName: " + characterName);
+
+        }
+
+
+
+
+        public void setHpBar(hp_bar hpBar) {
         this.hpBar = hpBar;
     }
     private boolean isDead = false;
@@ -245,7 +264,7 @@ package com.example.pokemomproj;
             SharedPreferences prefs = getContext().getSharedPreferences("GameData", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt("currentHp", 0);  // Lưu trạng thái chết
-
+            editor.putString("deadCharacter", characterName);
             editor.apply();
             Intent intent = new Intent(getContext(), CharacterSelectionActivity.class);
             getContext().startActivity(intent);
@@ -282,5 +301,12 @@ package com.example.pokemomproj;
     }
 
 
-}
+        public String getCharacterName() {
+        return characterName;
+        }
+
+        public int getCurrentHp() {
+            return currentHp;
+        }
+    }
 

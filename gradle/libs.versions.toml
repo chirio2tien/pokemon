@@ -9,6 +9,7 @@ annotationJvm = "1.9.1"
 junitJunit = "4.12"
 monitor = "1.7.2"
 androidxJunit = "1.2.1"
+firebaseCrashlyticsBuildtools = "3.0.3"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -20,6 +21,7 @@ annotation-jvm = { group = "androidx.annotation", name = "annotation-jvm", versi
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 monitor = { group = "androidx.test", name = "monitor", version.ref = "monitor" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
+firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

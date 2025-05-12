@@ -113,6 +113,17 @@
         app:layout_constraintStart_toStartOf="@+id/gifImageView"
         app:layout_constraintTop_toTopOf="@+id/gifImageView"
         tools:ignore="MissingConstraints" />
+    <Button
+        android:id="@+id/btnPause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pause"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        tools:ignore="MissingConstraints" />
+
+
 
     <com.example.pokemomproj.mana_bar
         android:id="@+id/botManaBar"

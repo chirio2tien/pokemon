@@ -1,33 +1,94 @@
 package com.example.pokemomproj;
 
-        import android.content.Context;
-        import android.content.Intent;
-        import android.widget.ImageView;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
-        import java.util.Random;
 
-        public class gift {
-            private final int[] images = {
-                R.drawable.g_Lum_Berry,
-                R.drawable.g_Oran_Berry,
-                R.drawable.g_Persim_Berry,
-                R.drawable.g_Sitrus_Berry
-            };
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-            private final Context context;
 
-            public gift(Context context) {
-                this.context = context;
-            }
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-            public void setRandomImage(ImageView imageView) {
-                Random random = new Random();
-                int randomIndex = random.nextInt(images.length);
-                imageView.setImageResource(images[randomIndex]);
-            }
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
 
-            public void navigateToCharacterSelection() {
-                Intent intent = new Intent(context, CharacterSelectionActivity.class);
-                context.startActivity(intent);
-            }
+public class gift extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        );
+        setContentView(R.layout.gift);
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewImageItem);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 4)); // 4 cột
+
+        SharedPreferences pref = getSharedPreferences("dsitem_pref", MODE_PRIVATE);
+        Gson gson = new Gson();
+
+        // Lấy danh sách từ SharedPreferences
+        String json = pref.getString("dsitem_data", null);
+        ArrayList<ImageItem.item> dsHinhitem;
+
+        if (json != null) {
+            Type type = new TypeToken<ArrayList<ImageItem.item>>() {}.getType();
+            dsHinhitem = gson.fromJson(json, type);
+        } else {
+            dsHinhitem = new ArrayList<>();
+            dsHinhitem.add(new ImageItem.item("g_aspear_berry", R.drawable.g_aspear_berry));
+            dsHinhitem.add(new ImageItem.item("g_berry_sprite", R.drawable.g_berry_sprite));
+            dsHinhitem.add(new ImageItem.item("g_leppa_berry", R.drawable.g_leppa_berry));
+            dsHinhitem.add(new ImageItem.item("g_lum_berry", R.drawable.g_lum_berry));
+            dsHinhitem.add(new ImageItem.item("g_oran_berry", R.drawable.g_oran_berry));
+            dsHinhitem.add(new ImageItem.item("g_pecha_berry", R.drawable.g_pecha_berry));
+            dsHinhitem.add(new ImageItem.item("g_persim_berry", R.drawable.g_persim_berry));
+            dsHinhitem.add(new ImageItem.item("g_petaya_berry", R.drawable.g_petaya_berry));
+            dsHinhitem.add(new ImageItem.item("g_sitrus_berry", R.drawable.g_sitrus_berry));
         }
+
+        // Shuffle và lấy 4 item ngẫu nhiên
+        Collections.shuffle(dsHinhitem);
+        ArrayList<ImageItem.item> displayList = new ArrayList<>(dsHinhitem.subList(0, Math.min(4, dsHinhitem.size())));
+
+        ImageItem adapter = new ImageItem(this, displayList);
+        recyclerView.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(position -> {
+            ImageItem.item selectedItem = displayList.get(position);
+
+            // Tăng số lượng của item trong danh sách chính
+            for (ImageItem.item item : dsHinhitem) {
+                if (item.gettenitem().equals(selectedItem.gettenitem())) {
+                    item.tangSoLuong();
+                    break;
+                }
+            }
+
+
+            // Lưu lại danh sách đã cập nhật vào SharedPreferences
+            String newJson = gson.toJson(dsHinhitem);
+            pref.edit().putString("dsitem_data", newJson).apply();
+
+            // Gửi item đã chọn sang MainActivity
+            selectItem(selectedItem.gettenitem());
+        });
+    }
+
+    private void selectItem(String item) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("item", item);
+        startActivity(intent);
+    }
+
+
+}
