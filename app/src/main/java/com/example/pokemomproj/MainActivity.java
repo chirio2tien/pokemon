@@ -6,8 +6,18 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import java.lang.reflect.Type;
+import androidx.appcompat.app.AlertDialog;
+
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private CharacterView characterView;
@@ -28,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
+
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        );
         setContentView(R.layout.activity_main);
 
         characterView = findViewById(R.id.characterView);
@@ -69,6 +83,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button btnPause = findViewById(R.id.btnPause);
+        btnPause.setOnClickListener(v -> {
+            pauseGame();
+            showItemDialog();
+        });
+
+
         Button btnHealSkill = findViewById(R.id.btnHealSkill);
         btnHealSkill.setOnClickListener(v -> {
             Log.d("Skill2", "Button heal skill clicked!");
@@ -84,37 +105,92 @@ public class MainActivity extends AppCompatActivity {
         });
 
         JoystickView joystickView = findViewById(R.id.joystickView);
-        joystickView.setJoystickListener((xPercent, yPercent) -> {
-            if (!isPaused) {
+        joystickView.setJoystickListener(new JoystickView.JoystickListener() {
+            @Override
+            public void onJoystickMoved(float xPercent, float yPercent) {
                 characterView.move(xPercent, yPercent);
             }
         });
 
-        // Pause & Resume
 
-
-//        btnPause.setOnClickListener(v -> {
-//            isPaused = true;
-//            characterView.setMovementEnabled(false);
-//            botView.setMovementEnabled(false);
-//            characterView.stopManaRegeneration();
-//            botView.stopManaRegeneration();
-//
-//            btnPause.setVisibility(View.GONE);
-//            btnResume.setVisibility(View.VISIBLE);
-//        });
-//
-//        btnResume.setOnClickListener(v -> {
-//            isPaused = false;
-//            characterView.setMovementEnabled(true);
-//            botView.setMovementEnabled(true);
-//            characterView.startManaRegeneration();
-//            botView.startManaRegeneration();
-//
-//            btnPause.setVisibility(View.VISIBLE);
-//            btnResume.setVisibility(View.GONE);
-//        });
     }
+    private void pauseGame() {
+        characterView.setMovementEnabled(false);
+        botView.setMovementEnabled(false);
+        botView.setPaused(true);
+    }
+    private void showItemDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.pause, null);
+        RecyclerView recyclerView = dialogView.findViewById(R.id.recyclerViewPopupItem);
+
+
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3)); //  3 cột
+
+        SharedPreferences pref = getSharedPreferences("dsitem_pref", MODE_PRIVATE);
+        String json = pref.getString("dsitem_data", null);
+        Gson gson = new Gson();
+        ArrayList<ImageItem.item> dsHinhitem;
+
+        if (json != null) {
+            Type type = new TypeToken<ArrayList<ImageItem.item>>() {}.getType();
+            dsHinhitem = gson.fromJson(json, type);
+        } else {
+            dsHinhitem = new ArrayList<>();
+        }
+
+        ArrayList<ImageItem.item> usableItems = new ArrayList<>();
+        for (ImageItem.item item : dsHinhitem) {
+            if (item.getSoLuong() > 0) {
+                usableItems.add(item);
+            }
+        }
+
+        ImageItem adapter = new ImageItem(this, usableItems);
+        recyclerView.setAdapter(adapter);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create();
+
+        dialog.setOnDismissListener(d -> resumeGame());
+
+
+        //  Xử lý chọn item
+        adapter.setOnItemClickListener(position -> {
+            ImageItem.item selected = usableItems.get(position);
+            applyItemEffect(selected.gettenitem());
+            selected.setSoLuong(selected.getSoLuong() - 1);
+
+            String newJson = gson.toJson(dsHinhitem);
+            pref.edit().putString("dsitem_data", newJson).apply();
+
+            dialog.dismiss();
+
+        });
+
+        dialog.show();
+    }
+
+    private void applyItemEffect(String itemName) {
+        switch (itemName) {
+            case "g_oran_berry":
+                characterView.healHp(30); // ví dụ hồi 30 HP
+                break;
+            case "g_leppa_berry":
+                characterView.reduceMana(-20); // tăng mana 20
+                break;
+            // thêm hiệu ứng khác tuỳ item
+        }
+    }
+    private void resumeGame() {
+        characterView.setMovementEnabled(true);
+        botView.setMovementEnabled(true);
+        characterView.startManaRegeneration();
+        botView.startManaRegeneration();
+        botView.setPaused(false);
+    }
+
 
     @Override
     protected void onResume() {
@@ -131,14 +207,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Trì hoãn việc set nhân vật để đảm bảo View đã vẽ xong
-        new Handler().postDelayed(() -> {
+
             if (characterName != null && characterView != null) {
                 Log.d("DEBUG", "Resume: Set character name = " + characterName);
                 characterView.setCharacterName(characterName);
             }
             botView.setCharacterX(imageX);
             botView.setCharacterY(imageY);
-        }, 200); // trì hoãn 200ms là đủ an toàn trong hầu hết các trường hợp
+         // trì hoãn 200ms là đủ an toàn trong hầu hết các trường hợp
 
     }
 

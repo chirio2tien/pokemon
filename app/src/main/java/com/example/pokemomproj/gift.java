@@ -25,6 +25,9 @@ public class gift extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        );
         setContentView(R.layout.gift);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewImageItem);
@@ -87,13 +90,5 @@ public class gift extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // Đang xem sex phương thức để clear toàn bộ SharedPreferences
-//    public void clearData(View view) {
-//        SharedPreferences pref = getSharedPreferences("dsitem_pref", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = pref.edit();
-//        editor.clear(); // Xóa toàn bộ SharedPreferences
-//        editor.apply();
-//        Toast.makeText(this, "Data cleared!", Toast.LENGTH_SHORT).show();
-//
-//      }
+
 }

@@ -119,8 +119,15 @@ package com.example.pokemomproj;
             }
         }
 
+        private boolean isMovementEnabled = true;
+
+        public void setMovementEnabled(boolean enabled) {
+            this.isMovementEnabled = enabled;
+        }
+
 
         public void move(float xPercent, float yPercent) {
+            if (!isMovementEnabled) return;
             float newX = characterX + xPercent * 10;
             float newY = characterY + yPercent * 10;
 
@@ -172,9 +179,7 @@ package com.example.pokemomproj;
             }
         }
 
-        public Node getPlayerPosition() {
-            return new Node((int) (characterX / 50), (int) (characterY / 50));
-        }
+
 
         public void setManaBar(mana_bar manaBar) {
             this.manaBar = manaBar;
@@ -259,7 +264,7 @@ package com.example.pokemomproj;
             SharedPreferences prefs = getContext().getSharedPreferences("GameData", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt("currentHp", 0);  // Lưu trạng thái chết
-
+            editor.putString("deadCharacter", characterName);
             editor.apply();
             Intent intent = new Intent(getContext(), CharacterSelectionActivity.class);
             getContext().startActivity(intent);
@@ -298,6 +303,10 @@ package com.example.pokemomproj;
 
         public String getCharacterName() {
         return characterName;
+        }
+
+        public int getCurrentHp() {
+            return currentHp;
         }
     }
 
