@@ -1,8 +1,9 @@
-package com.example.pokemomproj;
+    package com.example.pokemomproj;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
+    import android.content.Intent;
+    import android.content.SharedPreferences;
+    import android.os.Bundle;
+
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,21 +12,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+    import androidx.appcompat.app.AppCompatActivity;
+    import androidx.recyclerview.widget.GridLayoutManager;
+    import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+    import com.google.gson.Gson;
+    import com.google.gson.reflect.TypeToken;
+
+    import java.lang.reflect.Type;
+    import java.util.ArrayList;
+    import java.util.Arrays;
+    import java.util.HashSet;
+    import java.util.Set;
 
 
-public class CharacterSelectionActivity extends AppCompatActivity {
+    public class CharacterSelectionActivity extends AppCompatActivity {
+
 
 
 
@@ -46,11 +49,13 @@ public class CharacterSelectionActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerViewImage);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3)); // 3 cột
 
+
         SharedPreferences gamePrefs = getSharedPreferences("GameData", MODE_PRIVATE);
         String deadCharacter = gamePrefs.getString("deadCharacter", null);
 
-        SharedPreferences pref = getSharedPreferences("dsHinh_pref", MODE_PRIVATE);
-        String json = pref.getString("dsHinh_data", null);
+            SharedPreferences pref = getSharedPreferences("dsHinh_pref", MODE_PRIVATE);
+            String json = pref.getString("dsHinh_data", null);
+
 
         ArrayList<ImageOnlyAdapter.HinhAnh> dsHinh;
         Gson gson = new Gson();
@@ -97,23 +102,41 @@ public class CharacterSelectionActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
-        adapter.setOnItemClickListener(position -> {
-            ImageOnlyAdapter.HinhAnh hinhAnh = dsHinh.get(position);
+            if (json != null ) {
+                // Tạo lại danh sách từ chuỗi JSON
+                Type type = new TypeToken<ArrayList<ImageOnlyAdapter.HinhAnh>>() {}.getType();
+                dsHinh = gson.fromJson(json, type);
+            } else {
+                // Nếu chưa có dữ liệu, tạo danh sách mặc định
+                dsHinh = new ArrayList<>();
+                dsHinh.add(new ImageOnlyAdapter.HinhAnh("psyduck", R.drawable.psyduck));
+                dsHinh.add(new ImageOnlyAdapter.HinhAnh("pikachu", R.drawable.pikachu));
+                dsHinh.add(new ImageOnlyAdapter.HinhAnh("incineroar", R.drawable.incineroar));
+                dsHinh.add(new ImageOnlyAdapter.HinhAnh("gardervoid", R.drawable.gardervoid));
+                dsHinh.add(new ImageOnlyAdapter.HinhAnh("giratina", R.drawable.giratina));
+                dsHinh.add(new ImageOnlyAdapter.HinhAnh("urshifu", R.drawable.urshifu));
+            }
 
-            // 1. Xử lý chọn nhân vật trước
-            selectCharacter(hinhAnh.getTenHinh());
+
+            ImageOnlyAdapter adapter = new ImageOnlyAdapter(this, dsHinh);
+            recyclerView.setAdapter(adapter);
+
+            adapter.setOnItemClickListener(position -> {
+                ImageOnlyAdapter.HinhAnh hinhAnh = dsHinh.get(position);
+
+                // 1. Xử lý chọn nhân vật trước
+                selectCharacter(hinhAnh.getTenHinh());
+
+                // 2. Xoá ảnh khỏi danh sách (sau khi xử lý)
+                dsHinh.remove(position);
+                adapter.notifyItemRemoved(position);
+
+                // 3. Lưu danh sách ảnh còn lại vào SharedPreferences
+                String newJson = gson.toJson(dsHinh); // dùng lại gson đã khai báo ở trên
+                pref.edit().putString("dsHinh_data", newJson).apply();
 
 
-
-            // 3. Lưu danh sách ảnh còn lại vào SharedPreferences
-            String newJson = gson.toJson(dsHinh); // dùng lại gson đã khai báo ở trên
-            pref.edit().putString("dsHinh_data", newJson).apply();
-
-        });
-
-
-    }
-
+            });
 
     private void showGameOverScreen() {
         setContentView(R.layout.game_over_layout);
@@ -157,12 +180,14 @@ public class CharacterSelectionActivity extends AppCompatActivity {
 
 
 
-    private void selectCharacter(String characterName) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("characterName", characterName);
-        startActivity(intent);
+        }
+
+        private void selectCharacter(String characterName) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("characterName", characterName);
+            startActivity(intent);
+
+        }
+
 
     }
-
-
-}
