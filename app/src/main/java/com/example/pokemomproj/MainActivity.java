@@ -79,30 +79,29 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Pause & Resume
-        Button btnPause = findViewById(R.id.btnPause);
-        Button btnResume = findViewById(R.id.btnResume);
 
-        btnPause.setOnClickListener(v -> {
-            isPaused = true;
-            characterView.setMovementEnabled(false);
-            botView.setMovementEnabled(false);
-            characterView.stopManaRegeneration();
-            botView.stopManaRegeneration();
 
-            btnPause.setVisibility(View.GONE);
-            btnResume.setVisibility(View.VISIBLE);
-        });
-
-        btnResume.setOnClickListener(v -> {
-            isPaused = false;
-            characterView.setMovementEnabled(true);
-            botView.setMovementEnabled(true);
-            characterView.startManaRegeneration();
-            botView.startManaRegeneration();
-
-            btnPause.setVisibility(View.VISIBLE);
-            btnResume.setVisibility(View.GONE);
-        });
+//        btnPause.setOnClickListener(v -> {
+//            isPaused = true;
+//            characterView.setMovementEnabled(false);
+//            botView.setMovementEnabled(false);
+//            characterView.stopManaRegeneration();
+//            botView.stopManaRegeneration();
+//
+//            btnPause.setVisibility(View.GONE);
+//            btnResume.setVisibility(View.VISIBLE);
+//        });
+//
+//        btnResume.setOnClickListener(v -> {
+//            isPaused = false;
+//            characterView.setMovementEnabled(true);
+//            botView.setMovementEnabled(true);
+//            characterView.startManaRegeneration();
+//            botView.startManaRegeneration();
+//
+//            btnPause.setVisibility(View.VISIBLE);
+//            btnResume.setVisibility(View.GONE);
+//        });
     }
 
     @Override

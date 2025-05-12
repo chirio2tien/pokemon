@@ -78,9 +78,9 @@ public class gift extends AppCompatActivity {
         });
     }
 
-    private void selectItem(String characterName) {
+    private void selectItem(String item) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("characterName", characterName);
+        intent.putExtra("item", item);
         startActivity(intent);
     }
 
