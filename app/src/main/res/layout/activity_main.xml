@@ -30,22 +30,6 @@
         app:layout_constraintVertical_bias="0.439" />
 
 
-    <ImageButton
-        android:id="@+id/btnPause"
-        android:layout_width="64dp"
-        android:layout_height="37dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:background="@android:color/white"
-        android:contentDescription="Pause"
-        android:padding="8dp"
-        android:src="@drawable/pause"
-        app:layout_constraintEnd_toEndOf="@+id/characterView"
-        app:layout_constraintHorizontal_bias="0.629"
-        app:layout_constraintStart_toStartOf="@+id/gifImageView"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="0dp" />
-
     <com.example.pokemomproj.BotView
         android:id="@+id/botView"
         android:layout_width="550dp"
@@ -156,6 +140,17 @@
         app:layout_constraintStart_toStartOf="@+id/gifImageView"
         app:layout_constraintTop_toTopOf="@+id/gifImageView"
         tools:ignore="MissingConstraints" />
+    <Button
+        android:id="@+id/btnPause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pause"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        tools:ignore="MissingConstraints" />
+
+
 
     <com.example.pokemomproj.mana_bar
         android:id="@+id/botManaBar"

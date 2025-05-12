@@ -117,11 +117,19 @@ public class CharacterView extends View {
         }
     }
 
-    public void move(float xPercent, float yPercent) {
-        if (isPaused || !isMovable) return;
 
-        float newX = characterX + xPercent * 10;
-        float newY = characterY + yPercent * 10;
+        private boolean isMovementEnabled = true;
+
+        public void setMovementEnabled(boolean enabled) {
+            this.isMovementEnabled = enabled;
+        }
+
+
+        public void move(float xPercent, float yPercent) {
+            if (!isMovementEnabled) return;
+            float newX = characterX + xPercent * 10;
+            float newY = characterY + yPercent * 10;
+
 
         if (Math.abs(xPercent) > Math.abs(yPercent)) {
             if (xPercent > 0) {
@@ -149,10 +157,18 @@ public class CharacterView extends View {
             }
         }
 
-        if (currentDrawable != null) {
-            if (newX >= (float) currentDrawable.getIntrinsicWidth() / 2 && newX <= getWidth() - (float) currentDrawable.getIntrinsicWidth() / 2) {
-                characterX = newX;
-            }
+
+
+
+        public void setManaBar(mana_bar manaBar) {
+            this.manaBar = manaBar;
+        }
+
+        public void reduceMana(int amount) {
+            currentMana = Math.max(currentMana - amount, 0);
+            if (manaBar != null) {
+                manaBar.setMana(currentMana);
+
             if (newY >= (float) currentDrawable.getIntrinsicHeight() / 2 && newY <= getHeight() - (float) currentDrawable.getIntrinsicHeight() / 2) {
                 characterY = newY;
             }
@@ -255,7 +271,10 @@ public class CharacterView extends View {
             isDead = true;
             SharedPreferences prefs = getContext().getSharedPreferences("GameData", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt("currentHp", 0);
+
+            editor.putInt("currentHp", 0);  // Lưu trạng thái chết
+            editor.putString("deadCharacter", characterName);
+
             editor.apply();
             Intent intent = new Intent(getContext(), CharacterSelectionActivity.class);
             getContext().startActivity(intent);
@@ -297,9 +316,15 @@ public class CharacterView extends View {
         return new Node((int) (characterX / 50), (int) (characterY / 50));
     }
 
-    // --- Thêm mới ---
-    public void setMovable(boolean movable) {
-        this.isMovable = movable;
+
+        public String getCharacterName() {
+        return characterName;
+        }
+
+        public int getCurrentHp() {
+            return currentHp;
+        }
+
     }
 
     public boolean isMovable() {

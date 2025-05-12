@@ -10,6 +10,9 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.graphics.Paint;
+import android.graphics.Color;
+
 
 import androidx.core.content.ContextCompat;
 
@@ -47,12 +50,15 @@ public class BotView extends View {
     private hp_bar hpBar;
     private mana_bar manaBar;
     private CharacterView characterView;
+    private int deathCount = 0;
+
 
     public BotView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initAnimations(context);
         startAnimation();
         setNewDirectionAndDuration();
+        loadStats(); // Load stats từ file khi bot được tạo
 
         handler.post(frameUpdateRunnable);
         handler.post(logicRunnable);
@@ -104,14 +110,20 @@ public class BotView extends View {
     private final Runnable logicRunnable = new Runnable() {
         @Override
         public void run() {
-            if (!isPaused) {
-                if (random.nextFloat() < 0.25) {
-                    skill1 fireball = skill1.botUseSkill1(BotView.this, characterView);
-                    if (fireball != null) {
-                        fireball.setCharacterView(characterView);
-                        Log.d(TAG, "Bot used fireball skill.");
-                    }
+
+            if (isPaused  || characterView == null || characterView.getCurrentHp() <= 0) {
+                handler.postDelayed(this, 1000); // kiểm tra lại sau 1s nếu bị pause
+                return;
+            }
+
+            if (random.nextFloat() < 0.5) {
+                skill1 fireball = skill1.botUseSkill1(BotView.this, characterView);
+                if (fireball != null) {
+                    fireball.setCharacterView(characterView);
+                    Log.d(TAG, "Bot used fireball skill.");
+
                 }
+
 
                 if (random.nextFloat() < 0.25) {
                     skill3 beam = skill3.botUseSkill3(BotView.this, characterView);
@@ -121,12 +133,13 @@ public class BotView extends View {
                     }
                 }
 
-                if (random.nextFloat() < 0.25 && getCurrentMana() >= 65) {
-                    skill2 healing = new skill2(getContext(), BotView.this, null);
-                    healing.BotstartHealing(BotView.this);
-                }
+            if (random.nextFloat() < 0.25 && getCurrentMana() >= 65 && currentHp < maxHp) {
+                skill2 healing = new skill2(getContext(), BotView.this, null);
+                healing.BotstartHealing(BotView.this);
+            }
 
-                // NEW: skill5 usage — bot đứng yên khi dùng
+
+             
                 if (random.nextFloat() < 0.25 && getCurrentMana() >= 80) {
                     skill5 s5 = skill5.botUseSkill5(BotView.this, characterView);
                     if (s5 != null) {
@@ -138,6 +151,7 @@ public class BotView extends View {
             }
             handler.postDelayed(this, random.nextInt(500) + 1500);
         }
+
     };
 
     private void setNewDirectionAndDuration() {
@@ -164,6 +178,11 @@ public class BotView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        Paint textPaint = new Paint();
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(50);
+        canvas.drawText("da giet: " + deathCount, 50, 100, textPaint);
+
         if (animationDrawable != null) {
             canvas.save();
             canvas.translate(imageX - animationDrawable.getIntrinsicWidth() / 2, imageY - animationDrawable.getIntrinsicHeight() / 2);
@@ -173,7 +192,19 @@ public class BotView extends View {
         }
     }
 
+    private boolean isMovementEnabled = true;
+
+    public void setMovementEnabled(boolean enabled) {
+        this.isMovementEnabled = enabled;
+    }
+
+
+
+
     public void move(float xPercent, float yPercent) {
+        // Trong logic di chuyển của bot:
+        if (!isMovementEnabled) return;
+
         float newX = imageX + xPercent * 12;
         float newY = imageY + yPercent * 12;
 
@@ -206,37 +237,17 @@ public class BotView extends View {
         currentHp = Math.max(currentHp - (maxHp * percentage / 100), 0);
         if (hpBar != null) hpBar.setHp(currentHp);
         if (currentHp == 0 && !hasGivenGift) {
+            deathCount++;
+            saveStats();
             giveGift();
         }
     }
 
-    public void pause() {
-        isPaused = true;
-        if (animationDrawable != null && animationDrawable.isRunning()) {
-            animationDrawable.stop();
-        }
-    }
 
-    public void resume() {
-        isPaused = false;
-        if (animationDrawable != null && !animationDrawable.isRunning()) {
-            animationDrawable.start();
-        }
-    }
 
-    private void giveGift() {
-        hasGivenGift = true;
-        SharedPreferences prefs = getContext().getSharedPreferences("gifts", Context.MODE_PRIVATE);
-        int current = prefs.getInt("item_fireball", 0);
-        prefs.edit().putInt("item_fireball", current + 1).apply();
 
-        Intent intent = new Intent(getContext(), gift.class);
-        getContext().startActivity(intent);
-        if (getContext() instanceof MainActivity) {
-            ((MainActivity) getContext()).finish();
-        }
-        Log.d(TAG, "Bot defeated, gift given.");
-    }
+   
+
 
     public boolean checkCollision(float x, float y, float width, float height) {
         float botLeft = imageX - animationDrawable.getIntrinsicWidth() / 2;
@@ -287,6 +298,56 @@ public class BotView extends View {
     public float getCharacterY() { return imageY; }
     public void setCharacterX(float x) { this.imageX = x; }
     public void setCharacterY(float y) { this.imageY = y; }
+
     public String getCharacterName() { return characterName; }
+
+
+
+
+    private void giveGift() {
+        hasGivenGift = true;
+
+        // Tăng 10% chỉ số và lưu lại
+        maxHp = (int)(maxHp * 1.1);
+        maxMana = (int)(maxMana * 1.1);
+        saveStats();
+
+        SharedPreferences prefs = getContext().getSharedPreferences("gifts", Context.MODE_PRIVATE);
+        int current = prefs.getInt("item_fireball", 0);
+        prefs.edit().putInt("item_fireball", current + 1).apply();
+
+        Intent intent = new Intent(getContext(), gift.class);
+        getContext().startActivity(intent);
+        Log.d(TAG, "Bot defeated, gift given and stats increased.");
+    }
+
+    private void saveStats() {
+        SharedPreferences prefs = getContext().getSharedPreferences("bot_stats", Context.MODE_PRIVATE);
+        prefs.edit()
+                .putInt("maxHp", maxHp)
+                .putInt("maxMana", maxMana)
+                .putInt("deathCount", deathCount)
+                .apply();
+
+    }
+
+    private void loadStats() {
+        SharedPreferences prefs = getContext().getSharedPreferences("bot_stats", Context.MODE_PRIVATE);
+        maxHp = prefs.getInt("maxHp", 100);
+        maxMana = prefs.getInt("maxMana", 100);
+        deathCount = prefs.getInt("deathCount", 0);
+
+        currentHp = maxHp;
+        currentMana = maxMana;
+    }
+
+
+
+    private boolean isPaused = false;
+
+    public void setPaused(boolean paused) {
+        this.isPaused = paused;
+    }
+
 
 }
