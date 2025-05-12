@@ -56,8 +56,8 @@ public class skill1 extends View {
         post(new Runnable() {
             @Override
             public void run() {
-                float nextX = fireballX + directionX * 10;
-                float nextY = fireballY + directionY * 10;
+                float nextX = fireballX + directionX * 20;
+                float nextY = fireballY + directionY * 20;
 
                 // Lấy kích thước màn hình (map)
                 View parent = (View) getParent();

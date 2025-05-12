@@ -55,8 +55,8 @@ public class skill3 extends View {
         post(new Runnable() {
             @Override
             public void run() {
-                float nextX = skillX + directionX * 10;
-                float nextY = skillY + directionY * 10;
+                float nextX = skillX + directionX * 50;
+                float nextY = skillY + directionY * 50;
 
                 View parent = (View) getParent();
                 if (parent != null) {

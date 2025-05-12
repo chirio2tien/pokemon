@@ -45,7 +45,7 @@ public class BotView extends View {
     private int maxMana = 100;
     private int currentMana = 100;
     private boolean hasGivenGift = false;
-    private boolean isPaused = false;
+
 
     private hp_bar hpBar;
     private mana_bar manaBar;

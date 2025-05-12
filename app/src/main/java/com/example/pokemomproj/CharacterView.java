@@ -14,11 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import java.util.Objects;
-
 public class CharacterView extends View {
 
     private static final String TAG = "CharacterView";
-    private boolean isMovable = true;
 
     private float characterX;
     private float characterY;
@@ -42,9 +40,6 @@ public class CharacterView extends View {
     private int currentHp = 100;
     private String characterName = "gardervoid";
 
-    private boolean isPaused = false;
-    private boolean isDead = false;
-
     public CharacterView(Context context, AttributeSet attrs) {
         super(context, attrs);
         characterX = 200;
@@ -52,6 +47,7 @@ public class CharacterView extends View {
 
         initAnimations(context, characterName);
         startAnimation();
+
     }
 
     private void initAnimations(Context context, String characterName) {
@@ -89,47 +85,51 @@ public class CharacterView extends View {
         post(new Runnable() {
             @Override
             public void run() {
-                if (!isPaused && currentDrawable != null) {
+
+                if (currentDrawable != null) {
                     if (!currentDrawable.isRunning()) {
                         currentDrawable.start();
                     }
+
                     invalidate();
+                    postDelayed(this, 1000 / 60); // 60 FPS
                 }
-                postDelayed(this, 1000 / 60); // 60 FPS
             }
         });
     }
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
-        if (isPaused) return;
         super.onDraw(canvas);
         if (currentDrawable != null) {
             canvas.save();
+
+            // Center the drawable based on characterX and characterY
             float drawX = characterX - (float) currentDrawable.getIntrinsicWidth() / 2;
             float drawY = characterY - (float) currentDrawable.getIntrinsicHeight() / 2;
             canvas.translate(drawX, drawY);
             currentDrawable.setBounds(0, 0, currentDrawable.getIntrinsicWidth(), currentDrawable.getIntrinsicHeight());
             currentDrawable.draw(canvas);
             canvas.restore();
+
+            // Log the character's position for debugging
+
         } else {
             Log.e(TAG, "currentDrawable is null in onDraw");
         }
     }
 
+    private boolean isMovementEnabled = true;
 
-        private boolean isMovementEnabled = true;
-
-        public void setMovementEnabled(boolean enabled) {
-            this.isMovementEnabled = enabled;
-        }
+    public void setMovementEnabled(boolean enabled) {
+        this.isMovementEnabled = enabled;
+    }
 
 
-        public void move(float xPercent, float yPercent) {
-            if (!isMovementEnabled) return;
-            float newX = characterX + xPercent * 10;
-            float newY = characterY + yPercent * 10;
-
+    public void move(float xPercent, float yPercent) {
+        if (!isMovementEnabled) return;
+        float newX = characterX + xPercent * 10;
+        float newY = characterY + yPercent * 10;
 
         if (Math.abs(xPercent) > Math.abs(yPercent)) {
             if (xPercent > 0) {
@@ -157,25 +157,20 @@ public class CharacterView extends View {
             }
         }
 
-
-
-
-        public void setManaBar(mana_bar manaBar) {
-            this.manaBar = manaBar;
-        }
-
-        public void reduceMana(int amount) {
-            currentMana = Math.max(currentMana - amount, 0);
-            if (manaBar != null) {
-                manaBar.setMana(currentMana);
-
+        // Ensure character does not move out of bounds
+        if (currentDrawable != null) {
+            if (newX >= (float) currentDrawable.getIntrinsicWidth() / 2 && newX <= getWidth() - (float) currentDrawable.getIntrinsicWidth() / 2) {
+                characterX = newX;
+            }
             if (newY >= (float) currentDrawable.getIntrinsicHeight() / 2 && newY <= getHeight() - (float) currentDrawable.getIntrinsicHeight() / 2) {
                 characterY = newY;
             }
 
+            // Only update the drawable if it has changed
             if (currentDrawable != previousDrawable) {
                 previousDrawable = currentDrawable;
                 currentDrawable.start();
+                Log.d(TAG, "Animation started: " + currentDrawable);
             }
 
             postInvalidate();
@@ -184,19 +179,7 @@ public class CharacterView extends View {
         }
     }
 
-    public void pause() {
-        isPaused = true;
-        if (currentDrawable != null) {
-            currentDrawable.stop();
-        }
-    }
 
-    public void resume() {
-        isPaused = false;
-        if (currentDrawable != null && !currentDrawable.isRunning()) {
-            currentDrawable.start();
-        }
-    }
 
     public void setManaBar(mana_bar manaBar) {
         this.manaBar = manaBar;
@@ -208,7 +191,8 @@ public class CharacterView extends View {
             manaBar.setMana(currentMana);
         }
         if (currentMana == 0) {
-            Log.d(TAG, "Mana is depleted.");
+            Log.d(TAG, "Mana is depleted. Handling mana depletion.");
+            // Handle mana depletion logic here
         }
     }
 
@@ -216,13 +200,11 @@ public class CharacterView extends View {
         post(new Runnable() {
             @Override
             public void run() {
-                if (!isPaused) {
-                    currentMana = Math.min(currentMana + 8, maxMana);
-                    if (manaBar != null) {
-                        manaBar.setMana(currentMana);
-                    }
+                currentMana = Math.min(currentMana + 8, maxMana);
+                if (manaBar != null) {
+                    manaBar.setMana(currentMana);
                 }
-                postDelayed(this, 1000);
+                postDelayed(this, 1000); // Regenerate mana every second
             }
         });
     }
@@ -249,18 +231,28 @@ public class CharacterView extends View {
 
     public void setCharacterName(String characterName) {
         this.characterName = characterName;
+
+        // Khởi tạo lại các animation mới cho nhân vật này
         initAnimations(getContext(), characterName);
+
+        // Cập nhật drawable mặc định để hiển thị lại (ví dụ animation hướng xuống)
         currentDrawable = animationDrawableDown;
         previousDrawable = currentDrawable;
+
+        // Khởi động lại animation
         currentDrawable.start();
-        invalidate();
+        invalidate(); // ép vẽ lại view
         Log.d("CharacterView", "setCharacterName: " + characterName);
+
     }
+
+
+
 
     public void setHpBar(hp_bar hpBar) {
         this.hpBar = hpBar;
     }
-
+    private boolean isDead = false;
     public void reduceHp(int percentage) {
         if (isDead) return;
         currentHp = Math.max(currentHp - (maxHp * percentage / 100), 0);
@@ -271,63 +263,49 @@ public class CharacterView extends View {
             isDead = true;
             SharedPreferences prefs = getContext().getSharedPreferences("GameData", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
-
             editor.putInt("currentHp", 0);  // Lưu trạng thái chết
             editor.putString("deadCharacter", characterName);
-
             editor.apply();
             Intent intent = new Intent(getContext(), CharacterSelectionActivity.class);
             getContext().startActivity(intent);
-            if (getContext() instanceof MainActivity) {
-                ((MainActivity) getContext()).finish();
-            }
-        }
-    }
 
+            ((MainActivity) getContext()).finish();
+        }
+
+    }
     public boolean checkCollision(float x, float y, float width, float height) {
         float Left = characterX - currentDrawable.getIntrinsicWidth() / 2;
         float Right = characterX + currentDrawable.getIntrinsicWidth() / 2;
         float Top = characterY - currentDrawable.getIntrinsicHeight() / 2;
         float Bottom = characterY + currentDrawable.getIntrinsicHeight() / 2;
 
-        float skillLeft = x - 460;
-        float skillRight = x - 460 + width;
-        float skillTop = y - 130;
-        float skillBottom = y - 130 + height;
-
+        float skillLeft = x-460;
+        float skillRight = x-460 + width;
+        float skillTop = y-130;
+        float skillBottom = y-130 + height;
+        Log.e("skillbot", "x: " + x + " y: " + y + "characterX: " + characterX + " characterY: " + characterY);
         return !(skillLeft > Right || skillRight < Left || skillTop > Bottom || skillBottom < Top);
     }
-
     public void healHp(int amount) {
-        currentHp += amount;
+        int maxHp = 100; // Lấy HP tối đa của nhân vật
+        currentHp += amount; // Hồi máu
         if (currentHp > maxHp) {
-            currentHp = maxHp;
+            currentHp = maxHp; // Giới hạn HP không vượt quá tối đav
         }
         hpBar.setHp(currentHp);
         Log.d("CharacterView", "Healed " + amount + " HP. Current HP: " + currentHp);
     }
-
     public void useHealSkill() {
-        skill2 healSkill = new skill2(getContext(), null, CharacterView.this);
+        skill2 healSkill = new skill2(getContext(),null,CharacterView.this);
         healSkill.startHealing();
     }
 
-    public Node getPlayerPosition() {
-        return new Node((int) (characterX / 50), (int) (characterY / 50));
-    }
 
-
-        public String getCharacterName() {
+    public String getCharacterName() {
         return characterName;
-        }
-
-        public int getCurrentHp() {
-            return currentHp;
-        }
-
     }
 
-    public boolean isMovable() {
-        return isMovable;
+    public int getCurrentHp() {
+        return currentHp;
     }
 }

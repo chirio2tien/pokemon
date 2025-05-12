@@ -81,20 +81,7 @@ public class MainActivity extends AppCompatActivity {
         hp_bar characterHpBar = findViewById(R.id.characterHpBar);
         characterView.setHpBar(characterHpBar);
 
-
-        ImageButton btnPause = findViewById(R.id.btnPause);
-
-
-
-
-// Khi nhấn Pause
-        btnPause.setOnClickListener(v -> {
-            characterView.pause();
-            botView.pause();
-
-            Intent intent = new Intent(MainActivity.this, pause.class);
-            startActivity(intent);
-        });
+        
 
 
 
@@ -261,8 +248,7 @@ public class MainActivity extends AppCompatActivity {
             botView.setCharacterX(imageX);
             botView.setCharacterY(imageY);
 
-        characterView.resume();
-        botView.resume();
+
 
     }
 
