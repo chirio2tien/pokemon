@@ -10,8 +10,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 public class skill4 extends AppCompatImageView {
     private static final String TAG = "earthquakeSkill";
     private CharacterView characterView;
-    private int dmg = 500;  // Lượng máu hồi phục
-    private int mana = 10;    // Mana tiêu hao
+    private int dmg = 25;  // Lượng máu hồi phục
+    private int mana = 20;    // Mana tiêu hao
     private BotView botView;
 
 
@@ -51,22 +51,24 @@ public class skill4 extends AppCompatImageView {
     }
 
     public void startDamage() {
-        float characterX = characterView.getCharacterX()-80;
-        float characterY = characterView.getCharacterY();
-        float damageRadius = 300; // Define the radius of the circular damage area
+       if(characterView.getCurrentMana()>=mana){
+           float characterX = characterView.getCharacterX()-80;
+           float characterY = characterView.getCharacterY();
+           float damageRadius = 300; // Define the radius of the circular damage area
 
-        float enemyX = botView.getCharacterX()-80;
-        float enemyY = botView.getCharacterY();
+           float enemyX = botView.getCharacterX()-80;
+           float enemyY = botView.getCharacterY();
 
-        // Calculate the Euclidean distance between the character and the enemy
-        float distance = (float) Math.sqrt(Math.pow(characterX - enemyX, 2) + Math.pow(characterY - enemyY, 2));
+           // Calculate the Euclidean distance between the character and the enemy
+           float distance = (float) Math.sqrt(Math.pow(characterX - enemyX, 2) + Math.pow(characterY - enemyY, 2));
 
-        // Check if the enemy is within the circular damage radius
-        if (distance <= damageRadius) {
-            botView.reduceHp(dmg); // Apply 50 damage to the enemy
-            Log.d("skill4", "xy play + " + characterX + " " + characterY+" enemy + " + enemyX + " " + enemyY);
-        } else {
-            Log.d(TAG, "Bot is out of range. No damage applied.");
-        }
+           // Check if the enemy is within the circular damage radius
+           if (distance <= damageRadius) {
+               botView.reduceHp(dmg); // Apply 50 damage to the enemy
+               Log.d("skill4", "xy play + " + characterX + " " + characterY+" enemy + " + enemyX + " " + enemyY);
+           } else {
+               Log.d(TAG, "Bot is out of range. No damage applied.");
+           }
+       }
     }
 }

@@ -19,6 +19,8 @@ import androidx.core.content.ContextCompat;
 import java.util.Objects;
 import java.util.Random;
 
+// phần đầu giữ nguyên...
+
 public class BotView extends View {
     private static final String TAG = "BotView";
 
@@ -43,6 +45,7 @@ public class BotView extends View {
     private int maxMana = 100;
     private int currentMana = 100;
     private boolean hasGivenGift = false;
+
 
     private hp_bar hpBar;
     private mana_bar manaBar;
@@ -96,8 +99,10 @@ public class BotView extends View {
     private final Runnable frameUpdateRunnable = new Runnable() {
         @Override
         public void run() {
-            move(xDirection, yDirection);
-            invalidate();
+            if (!isPaused ) {
+                move(xDirection, yDirection);
+                invalidate();
+            }
             handler.postDelayed(this, 1000 / 60); // 60 FPS
         }
     };
@@ -105,6 +110,7 @@ public class BotView extends View {
     private final Runnable logicRunnable = new Runnable() {
         @Override
         public void run() {
+
             if (isPaused  || characterView == null || characterView.getCurrentHp() <= 0) {
                 handler.postDelayed(this, 1000); // kiểm tra lại sau 1s nếu bị pause
                 return;
@@ -115,14 +121,34 @@ public class BotView extends View {
                 if (fireball != null) {
                     fireball.setCharacterView(characterView);
                     Log.d(TAG, "Bot used fireball skill.");
+
                 }
-            }
+
+
+                if (random.nextFloat() < 0.25) {
+                    skill3 beam = skill3.botUseSkill3(BotView.this, characterView);
+                    if (beam != null) {
+                        beam.setCharacterView(characterView);
+                        Log.d(TAG, "Bot used beam skill.");
+                    }
+                }
 
             if (random.nextFloat() < 0.25 && getCurrentMana() >= 65 && currentHp < maxHp) {
                 skill2 healing = new skill2(getContext(), BotView.this, null);
                 healing.BotstartHealing(BotView.this);
             }
 
+
+             
+                if (random.nextFloat() < 0.25 && getCurrentMana() >= 80) {
+                    skill5 s5 = skill5.botUseSkill5(BotView.this, characterView);
+                    if (s5 != null) {
+                        s5.setCharacterView(characterView);
+                        Log.d(TAG, "Bot used skill5.");
+                    }
+
+                }
+            }
             handler.postDelayed(this, random.nextInt(500) + 1500);
         }
 
@@ -140,11 +166,11 @@ public class BotView extends View {
         post(new Runnable() {
             @Override
             public void run() {
-                if (animationDrawable != null) {
+                if (!isPaused && animationDrawable != null) {
                     animationDrawable.start();
                     invalidate();
-                    postDelayed(this, 1000 / 60);
                 }
+                postDelayed(this, 1000 / 60);
             }
         });
     }
@@ -219,6 +245,10 @@ public class BotView extends View {
 
 
 
+
+   
+
+
     public boolean checkCollision(float x, float y, float width, float height) {
         float botLeft = imageX - animationDrawable.getIntrinsicWidth() / 2;
         float botRight = imageX + animationDrawable.getIntrinsicWidth() / 2;
@@ -247,8 +277,10 @@ public class BotView extends View {
         post(new Runnable() {
             @Override
             public void run() {
-                currentMana = Math.min(currentMana + 20, maxMana);
-                if (manaBar != null) manaBar.setMana(currentMana);
+                if (!isPaused) {
+                    currentMana = Math.min(currentMana + 20, maxMana);
+                    if (manaBar != null) manaBar.setMana(currentMana);
+                }
                 postDelayed(this, 1000);
             }
         });
@@ -257,7 +289,8 @@ public class BotView extends View {
     // Getters/Setters
     public int getCurrentMana() { return currentMana; }
     public int getMaxMana() { return maxMana; }
-    public float getCurrentHp() { return currentHp; }
+    public int getCurrentHp() { return currentHp; }
+    public void setCurrentHp(int currentHp) { this.currentHp = currentHp; }
     public void setHpBar(hp_bar hpBar) { this.hpBar = hpBar; }
     public void setManaBar(mana_bar manaBar) { this.manaBar = manaBar; }
     public void setCharacterView(CharacterView characterView) { this.characterView = characterView; }
@@ -265,6 +298,9 @@ public class BotView extends View {
     public float getCharacterY() { return imageY; }
     public void setCharacterX(float x) { this.imageX = x; }
     public void setCharacterY(float y) { this.imageY = y; }
+
+    public String getCharacterName() { return characterName; }
+
 
 
 
@@ -312,5 +348,6 @@ public class BotView extends View {
     public void setPaused(boolean paused) {
         this.isPaused = paused;
     }
+
 
 }

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.core.content.ContextCompat;
 
-public class skill3 extends View {
+public class skill5 extends View {
     private static final String TAG = "SolarBeamSkill";
     private float skillX;
     private float skillY;
@@ -24,7 +24,7 @@ public class skill3 extends View {
     private BotView botView;
     private CharacterView characterView;
 
-    public skill3(Context context, float startX, float startY, float directionX, float directionY, int width, int height) {
+    public skill5(Context context, float startX, float startY, float directionX, float directionY, int width, int height) {
         super(context);
         this.skillX = startX;
         this.skillY = startY;
@@ -39,7 +39,7 @@ public class skill3 extends View {
     }
 
     private void initSkillAnimation(Context context) {
-        Drawable drawable = ContextCompat.getDrawable(context, R.drawable.beam);
+        Drawable drawable = ContextCompat.getDrawable(context, R.drawable.hasa);
         if (drawable instanceof AnimatedImageDrawable) {
             animatedImageDrawable = (AnimatedImageDrawable) drawable;
             animatedImageDrawable.start();
@@ -55,8 +55,8 @@ public class skill3 extends View {
         post(new Runnable() {
             @Override
             public void run() {
-                float nextX = skillX + directionX * 50;
-                float nextY = skillY + directionY * 50;
+                float nextX = skillX + directionX * 10;
+                float nextY = skillY + directionY * 10;
 
                 View parent = (View) getParent();
                 if (parent != null) {
@@ -88,21 +88,36 @@ public class skill3 extends View {
     }
 
     private void checkCollision() {
-        if (botView != null) {
-            if (botView.checkCollision(skillX, skillY, skillWidth, skillHeight)) {
-                Log.d(TAG, "Hit bot with Laze!");
-                botView.reduceHp(30);
-                removeSelf();
-            }
+        if (botView != null && botView.checkCollision(skillX, skillY, skillWidth, skillHeight)) {
+            Log.d(TAG, "Hit bot with Laze!");
+            applyDamageOverTime(botView);
+            removeSelf();
         }
-        if (characterView != null) {
-            if (characterView.checkCollision(skillX, skillY, skillWidth, skillHeight)) {
-                Log.d(TAG, "Player hit by Laze!");
-                characterView.reduceHp(30);
-                removeSelf();
-            }
+
+        if (characterView != null && characterView.checkCollision(skillX, skillY, skillWidth, skillHeight)) {
+            Log.d(TAG, "Player hit by Laze!");
+            applyDamageOverTime(characterView);
+            removeSelf();
         }
     }
+
+    private void applyDamageOverTime(final Object target) {
+        final int damagePerTick = 8;
+        final int ticks = 4;
+        final int interval = 1000; // 1 giây
+
+        for (int i = 0; i < ticks; i++) {
+            final int delay = i * interval;
+            postDelayed(() -> {
+                if (target instanceof BotView) {
+                    ((BotView) target).reduceHp(damagePerTick);
+                } else if (target instanceof CharacterView) {
+                    ((CharacterView) target).reduceHp(damagePerTick);
+                }
+            }, delay);
+        }
+    }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -131,7 +146,7 @@ public class skill3 extends View {
         this.characterView = characterView;
     }
 
-    public static skill3 createSkill(CharacterView characterView) {
+    public static skill5 createSkill(CharacterView characterView) {
         if (characterView.getCurrentMana() >= characterView.getMaxMana() * 0.3) {
             Log.d(TAG, "Casting Laze skill!");
             float dirX = 0;
@@ -152,7 +167,7 @@ public class skill3 extends View {
             float startX = location[0] + characterView.getCharacterX() - 80;
             float startY = location[1] + characterView.getCharacterY();
 
-            skill3 skill = new skill3(characterView.getContext(), startX, startY, dirX, dirY, 120, 120);
+            skill5 skill = new skill5(characterView.getContext(), startX, startY, dirX, dirY, 120, 120);
             ((ViewGroup) characterView.getParent()).addView(skill);
 
             characterView.reduceMana((int) (characterView.getMaxMana() * 0.3));
@@ -162,7 +177,7 @@ public class skill3 extends View {
         return null;
     }
 
-    public static skill3 botUseSkill3(BotView botView, CharacterView characterView) {
+    public static skill5 botUseSkill5(BotView botView, CharacterView characterView) {
         if (botView.getCurrentMana() >= botView.getMaxMana() * 0.3) {
             Log.d(TAG, "Bot casting Laze!");
 
@@ -184,7 +199,7 @@ public class skill3 extends View {
                 dirY /= length;
             }
 
-            skill3 skill = new skill3(botView.getContext(), botX - 80, botY, dirX, dirY, 120, 120);
+            skill5 skill = new skill5(botView.getContext(), botX - 80, botY, dirX, dirY, 120, 120);
             ((ViewGroup) botView.getParent()).addView(skill);
             botView.reduceMana((int) (botView.getMaxMana() * 0.3));
             return skill;

@@ -14,7 +14,7 @@ public class skill2 extends AppCompatImageView {
     private CharacterView characterView;
     private BotView botView;
     private int healAmount = 50;  // Lượng máu hồi phục
-    private int manaCost = 65;    // Mana tiêu hao
+    private int manaCost =75;    // Mana tiêu hao
 
 
 
