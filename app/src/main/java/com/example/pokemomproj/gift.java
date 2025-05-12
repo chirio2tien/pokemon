@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -68,6 +70,7 @@ public class gift extends AppCompatActivity {
                     break;
                 }
             }
+
 
             // Lưu lại danh sách đã cập nhật vào SharedPreferences
             String newJson = gson.toJson(dsHinhitem);
