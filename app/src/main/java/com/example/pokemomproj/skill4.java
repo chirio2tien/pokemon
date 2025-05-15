@@ -52,6 +52,7 @@ public class skill4 extends AppCompatImageView {
 
     public void startDamage() {
        if(characterView.getCurrentMana()>=mana){
+              characterView.reduceMana(mana); // Giảm mana của nhân vật
            float characterX = characterView.getCharacterX()-80;
            float characterY = characterView.getCharacterY();
            float damageRadius = 300; // Define the radius of the circular damage area
