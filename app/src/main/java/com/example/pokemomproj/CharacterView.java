@@ -252,15 +252,14 @@ public class CharacterView extends View {
     public void setHpBar(hp_bar hpBar) {
         this.hpBar = hpBar;
     }
-    private boolean isDead = false;
+
     public void reduceHp(int percentage) {
-        if (isDead) return;
         currentHp = Math.max(currentHp - (maxHp * percentage / 100), 0);
         if (hpBar != null) {
             hpBar.setHp(currentHp);
         }
-        if (currentHp == 0 && !isDead) {
-            isDead = true;
+        if (currentHp == 0 ) {
+
             SharedPreferences prefs = getContext().getSharedPreferences("GameData", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt("currentHp", 0);  // Lưu trạng thái chết

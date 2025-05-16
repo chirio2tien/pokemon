@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             case "g_leppa_berry":
                 characterView.reduceMana(-20); // tăng mana 20
                 break;
-            // thêm hiệu ứng khác tuỳ item
+
         }
     }
     private void resumeGame() {
@@ -225,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        resumeGame();
 
         SharedPreferences prefs = getSharedPreferences("GameData", MODE_PRIVATE);
         currentHp = prefs.getInt("currentHp", 100);
@@ -256,6 +257,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        pauseGame();
         SharedPreferences prefs = getSharedPreferences("GameData", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("currentHp", currentHp);
